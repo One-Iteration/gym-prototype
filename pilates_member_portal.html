@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corpo Pilates — Member Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F7F5;
+    --surface: #FFFFFF;
+    --surface-2: #F1F1EE;
+    --ink: #0F1115;
+    --ink-2: #4A4F58;
+    --ink-3: #8B8F99;
+    --ink-4: #C4C7CD;
+    --line: #E5E5E2;
+    --line-soft: #EFEFEC;
+    --brand: #FF5722;
+    --brand-dark: #D94315;
+    --brand-tint: #FFE4D6;
+    --success: #00875A;
+    --success-tint: #D6F1E5;
+    --warn: #E5484D;
+    --warn-tint: #FFE4E6;
+    --info: #1F4FDB;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; letter-spacing: -0.02em; }
+
+  .proto-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: var(--ink); color: white;
+    padding: 9px 24px; font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  /* ---------- TOP NAV ---------- */
+  .nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding: 0 32px;
+    position: sticky;
+    top: 31px; z-index: 100;
+  }
+  .nav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex; align-items: center;
+    height: 64px;
+    gap: 32px;
+  }
+  .brand {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .brand b { color: var(--brand); font-weight: 600; }
+  .nav-links {
+    display: flex; gap: 4px;
+    flex: 1;
+  }
+  .nav-link {
+    padding: 8px 14px;
+    font-size: 14px;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .nav-link.active {
+    background: var(--ink);
+    color: white;
+  }
+  .nav-link:not(.active):hover { background: var(--surface-2); color: var(--ink); }
+  .nav-actions { display: flex; align-items: center; gap: 12px; }
+  .icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-2);
+    position: relative;
+  }
+  .icon-btn:hover { background: var(--surface-2); }
+  .icon-btn .badge {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 8px; height: 8px;
+    background: var(--brand);
+    border-radius: 50%;
+    border: 2px solid var(--surface);
+  }
+  .avatar-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 12px 4px 4px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .avatar-pill:hover { background: var(--line-soft); }
+  .av {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--ink); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+  }
+  .av-lg { width: 56px; height: 56px; font-size: 20px; }
+  .av-name { font-size: 13px; font-weight: 500; }
+  .av-pro { background: var(--brand); }
+
+  /* ---------- PAGE ---------- */
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .hero-card {
+    background: var(--ink);
+    color: white;
+    border-radius: 18px;
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+    display: flex; flex-direction: column;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand);
+    font-weight: 600;
+  }
+  .hero-eyebrow .pulse {
+    width: 6px; height: 6px;
+    background: var(--brand);
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 var(--brand);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(255, 87, 34, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
+  }
+  .hero-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 400;
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin: 16px 0 8px;
+  }
+  .hero-title b { font-weight: 600; color: var(--brand); }
+  .hero-when {
+    font-size: 16px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 24px;
+  }
+  .countdown {
+    display: flex; gap: 24px;
+    margin-bottom: auto;
+    padding-bottom: 24px;
+  }
+  .cd-item .v {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .cd-item .l {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+  .hero-meta {
+    display: flex; gap: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    font-size: 13px;
+  }
+  .hero-meta .k { color: rgba(255,255,255,0.5); display: block; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .hero-meta .v { font-weight: 500; }
+  .hero-actions {
+    position: absolute;
+    bottom: 36px; right: 36px;
+    display: flex; gap: 10px;
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--brand);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--brand-dark); }
+  .btn-dark {
+    background: var(--ink); color: white;
+  }
+  .btn-dark:hover { background: #2a2d33; }
+  .btn-ghost { border-color: var(--line); }
+  .btn-ghost:hover { background: var(--surface-2); }
+  .btn-light {
+    background: rgba(255,255,255,0.12); color: white;
+    backdrop-filter: blur(8px);
+  }
+  .btn-light:hover { background: rgba(255,255,255,0.2); }
+  .btn-sm { padding: 8px 14px; font-size: 13px; }
+
+  /* hero side stats */
+  .hero-side {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+    flex: 1;
+    display: flex; flex-direction: column;
+  }
+  .stat-card.featured {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: white;
+  }
+  .stat-lbl {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+  }
+  .stat-card.featured .stat-lbl { color: rgba(255,255,255,0.8); }
+  .stat-val {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 1;
+    margin-top: 8px;
+    letter-spacing: -0.02em;
+  }
+  .stat-val small {
+    font-size: 18px;
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+  .stat-card.featured .stat-val small { color: rgba(255,255,255,0.7); }
+  .stat-sub {
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-top: 8px;
+  }
+  .stat-card.featured .stat-sub { color: rgba(255,255,255,0.85); }
+  .stat-bar {
+    margin-top: auto; padding-top: 16px;
+    height: 4px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .stat-card.featured .stat-bar { background: rgba(255,255,255,0.2); }
+  .stat-bar i {
+    display: block; height: 100%;
+    background: var(--brand);
+    border-radius: 2px;
+  }
+  .stat-card.featured .stat-bar i { background: white; }
+
+  /* ---------- STATS ROW ---------- */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .stats-row .stat-card { padding: 18px; }
+  .stats-row .stat-val { font-size: 28px; }
+
+  /* ---------- SECTION HEAD ---------- */
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-head h2 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+  .section-head .meta {
+    font-size: 13px;
+    color: var(--ink-3);
+  }
+  .section-head a {
+    font-size: 13px;
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1px;
+  }
+  .section-head a:hover { color: var(--brand); border-bottom-color: var(--brand); }
+
+  /* ---------- TWO COL ---------- */
+  .two-col {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  /* ---------- SCHEDULE COMPACT ---------- */
+  .schedule-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .schedule-tabs {
+    display: flex;
+    padding: 16px 20px 0;
+    gap: 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .schedule-tab {
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--ink-3);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+    font-family: inherit;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .schedule-tab.active {
+    color: var(--ink);
+    border-bottom-color: var(--brand);
+    font-weight: 500;
+  }
+  .schedule-tab .count {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 7px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .schedule-tab.active .count { background: var(--brand-tint); color: var(--brand-dark); }
+
+  .schedule-body { padding: 20px; }
+  .schedule-day-label {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .schedule-class {
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+    cursor: pointer;
+    transition: background 0.12s;
+    margin: 0 -8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 8px;
+  }
+  .schedule-class:last-child { border-bottom: none; }
+  .schedule-class:hover { background: var(--surface-2); }
+  .sc-time { 
+    text-align: left;
+  }
+  .sc-time .t {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .sc-time .d {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 4px;
+  }
+  .sc-info .nm {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .sc-info .lv {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 1px;
+  }
+  .sc-info .ts {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .sc-info .ts .dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    color: var(--ink-2);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 600;
+  }
+  .sc-info .seats {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-left: 6px;
+  }
+  .sc-info .seats.warn { color: var(--brand); font-weight: 500; }
+  .sc-action .btn { white-space: nowrap; }
+  .booked-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px;
+    background: var(--success-tint);
+    color: var(--success);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  /* ---------- BOOKINGS LIST ---------- */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .panel-head {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .panel-head h3 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+  }
+  .panel-head .lnk {
+    font-size: 12px;
+    color: var(--ink-3);
+    text-decoration: none;
+  }
+  .panel-body { padding: 8px 20px 16px; }
+
+  .booking-row {
+    display: flex; gap: 14px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .booking-row:last-child { border-bottom: none; }
+  .br-date {
+    width: 48px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .br-date .m {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand);
+    font-weight: 600;
+  }
+  .br-date .d {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .br-info { flex: 1; min-width: 0; }
+  .br-info .nm { font-size: 14px; font-weight: 500; }
+  .br-info .mt { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  .br-status {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .br-status.ok { background: var(--success-tint); color: var(--success); }
+  .br-status.wait { background: var(--brand-tint); color: var(--brand-dark); }
+
+  /* ---------- PACKS ---------- */
+  .packs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .pack-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .pack-card.featured {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .pack-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  .pack-card.featured .pack-eyebrow { color: var(--brand); }
+  .pack-name {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    margin: 6px 0 12px;
+  }
+  .pack-progress {
+    display: flex; align-items: center; gap: 16px;
+    margin: 16px 0;
+  }
+  .pack-ring {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: conic-gradient(var(--brand) calc(var(--p) * 1%), var(--surface-2) 0);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .pack-card.featured .pack-ring {
+    background: conic-gradient(var(--brand) calc(var(--p) * 1%), rgba(255,255,255,0.15) 0);
+  }
+  .pack-ring::after {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    background: var(--surface);
+    border-radius: 50%;
+  }
+  .pack-card.featured .pack-ring::after { background: var(--ink); }
+  .pack-ring-num {
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    z-index: 1;
+  }
+  .pack-detail .left {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .pack-detail .left small { color: var(--ink-3); font-weight: 400; }
+  .pack-card.featured .pack-detail .left small { color: rgba(255,255,255,0.6); }
+  .pack-detail .exp {
+    font-size: 11px;
+    color: var(--brand);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .pack-card.featured .pack-detail .exp { color: var(--brand); }
+  .pack-foot {
+    display: flex; gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-soft);
+    margin-top: 14px;
+  }
+  .pack-card.featured .pack-foot { border-top-color: rgba(255,255,255,0.12); }
+  .pack-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    color: var(--ink-2);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .pack-card.featured .pack-tag { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.85); }
+
+  .pack-card.upsell {
+    background: var(--brand-tint);
+    border-color: var(--brand-tint);
+    border-style: dashed;
+    border-color: var(--brand);
+  }
+  .pack-card.upsell .pack-eyebrow { color: var(--brand-dark); }
+  .pack-card.upsell .pack-name { color: var(--brand-dark); }
+  .pack-card.upsell .upsell-body {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- ACTIVITY ---------- */
+  .activity {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 24px;
+  }
+  .activity-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
+  }
+  .activity-list {
+    display: flex; flex-direction: column;
+    gap: 16px;
+  }
+  .activity-item {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .activity-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--success-tint);
+    color: var(--success);
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .activity-icon.brand { background: var(--brand-tint); color: var(--brand); }
+  .activity-info .nm { font-size: 14px; font-weight: 500; }
+  .activity-info .when { font-size: 12px; color: var(--ink-3); margin-top: 1px; }
+  .activity-info .desc { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+
+  .streak-viz {
+    background: var(--surface-2);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .streak-num {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--brand);
+    margin-bottom: 4px;
+  }
+  .streak-lbl {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-bottom: 18px;
+  }
+  .streak-grid {
+    display: grid;
+    grid-template-columns: repeat(14, 1fr);
+    gap: 4px;
+  }
+  .streak-cell {
+    aspect-ratio: 1;
+    background: var(--line);
+    border-radius: 3px;
+  }
+  .streak-cell.l1 { background: #FFC4A7; }
+  .streak-cell.l2 { background: #FF8B5A; }
+  .streak-cell.l3 { background: var(--brand); }
+  .streak-axis {
+    display: flex; justify-content: space-between;
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---------- ICONS ---------- */
+  .ico { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .ico-sm { width: 14px; height: 14px; }
+  .ico-lg { width: 18px; height: 18px; }
+
+  @media (max-width: 980px) {
+    .hero, .two-col, .activity-grid { grid-template-columns: 1fr; }
+    .stats-row, .packs-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <span>Visual prototype · Member portal · Logged-in experience</span>
+  <span>Hover & click are illustrative</span>
+</div>
+
+<!-- TOP NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">CORPO<b>.</b></div>
+    <div class="nav-links">
+      <a class="nav-link active">Home</a>
+      <a class="nav-link">Schedule</a>
+      <a class="nav-link">My bookings</a>
+      <a class="nav-link">Packages</a>
+      <a class="nav-link">Family</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" title="Search">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </button>
+      <button class="icon-btn" title="Notifications">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+        <span class="badge"></span>
+      </button>
+      <div class="avatar-pill">
+        <div class="av av-pro">SK</div>
+        <span class="av-name">Sarah K.</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-card">
+      <span class="hero-eyebrow"><span class="pulse"></span>Next class · today</span>
+      <h1 class="hero-title display">Reformer<br><b>Sculpt.</b></h1>
+      <div class="hero-when">Tuesday 5 May · 18:00 · Studio A · Reformer 03</div>
+      <div class="countdown">
+        <div class="cd-item"><div class="v">03</div><div class="l">Hours</div></div>
+        <div class="cd-item"><div class="v">24</div><div class="l">Minutes</div></div>
+        <div class="cd-item"><div class="v">12</div><div class="l">Seconds</div></div>
+      </div>
+      <div class="hero-meta">
+        <div><span class="k">Instructor</span><span class="v">Yara Nasser</span></div>
+        <div><span class="k">Duration</span><span class="v">50 minutes</span></div>
+        <div><span class="k">Status</span><span class="v">Confirmed</span></div>
+      </div>
+      <div class="hero-actions">
+        <button class="btn btn-light btn-sm">Cancel</button>
+        <button class="btn btn-primary btn-sm">Get directions</button>
+      </div>
+    </div>
+    <div class="hero-side">
+      <div class="stat-card featured">
+        <div class="stat-lbl">Credits available</div>
+        <div class="stat-val">7 <small>/ 10</small></div>
+        <div class="stat-sub">10-class reformer pack · expires in 18 days</div>
+        <div class="stat-bar"><i style="width: 70%"></i></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-lbl">This month</div>
+        <div class="stat-val">8 <small>classes</small></div>
+        <div class="stat-sub">Up from 6 in April · personal best</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-row">
+    <div class="stat-card">
+      <div class="stat-lbl">Total classes</div>
+      <div class="stat-val">72</div>
+      <div class="stat-sub">Member since Sept 2024</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Current streak</div>
+      <div class="stat-val">12 <small>weeks</small></div>
+      <div class="stat-sub">Beat your best of 9</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Favourite class</div>
+      <div class="stat-val" style="font-size: 22px;">Reformer Sculpt</div>
+      <div class="stat-sub">14 attended · 4.9 avg rating</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Member tier</div>
+      <div class="stat-val" style="font-size: 22px; color: var(--brand);">Regular</div>
+      <div class="stat-sub">3 more this month → Devoted tier</div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE + UPCOMING -->
+  <section class="two-col">
+    <div class="schedule-card">
+      <div class="schedule-tabs">
+        <button class="schedule-tab active">Today<span class="count">3</span></button>
+        <button class="schedule-tab">Tomorrow<span class="count">5</span></button>
+        <button class="schedule-tab">Wednesday<span class="count">4</span></button>
+        <button class="schedule-tab">Thursday<span class="count">5</span></button>
+        <button class="schedule-tab">This week<span class="count">28</span></button>
+      </div>
+      <div class="schedule-body">
+        <div class="schedule-day-label">Tuesday · 5 May</div>
+
+        <div class="schedule-class">
+          <div class="sc-time"><div class="t">12:30</div><div class="d">50 min</div></div>
+          <div class="sc-info">
+            <div class="nm">Stretch &amp; Release</div>
+            <div class="lv">Beginners · low impact</div>
+            <div class="ts">
+              <span class="dot">LM</span> Lara Mansour
+              <span class="seats">· 8 seats left</span>
+            </div>
+          </div>
+          <div class="sc-action"><button class="btn btn-ghost btn-sm">Book · 1 credit</button></div>
+        </div>
+
+        <div class="schedule-class">
+          <div class="sc-time"><div class="t">18:00</div><div class="d">50 min</div></div>
+          <div class="sc-info">
+            <div class="nm">Reformer Sculpt</div>
+            <div class="lv">Intermediate</div>
+            <div class="ts">
+              <span class="dot">YN</span> Yara Nasser
+              <span class="seats">· Reformer 03</span>
+            </div>
+          </div>
+          <div class="sc-action"><span class="booked-tag">
+            <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+            Booked
+          </span></div>
+        </div>
+
+        <div class="schedule-class">
+          <div class="sc-time"><div class="t">19:30</div><div class="d">50 min</div></div>
+          <div class="sc-info">
+            <div class="nm">Tower &amp; Mat</div>
+            <div class="lv">All levels</div>
+            <div class="ts">
+              <span class="dot">SR</span> Salma Rashid
+              <span class="seats warn">· 1 seat left</span>
+            </div>
+          </div>
+          <div class="sc-action"><button class="btn btn-primary btn-sm">Quick book</button></div>
+        </div>
+
+        <div class="schedule-day-label" style="margin-top: 28px;">Wednesday · 6 May</div>
+
+        <div class="schedule-class">
+          <div class="sc-time"><div class="t">07:00</div><div class="d">50 min</div></div>
+          <div class="sc-info">
+            <div class="nm">Reformer Foundations</div>
+            <div class="lv">Beginners</div>
+            <div class="ts">
+              <span class="dot">DA</span> Dina Alami
+              <span class="seats">· 7 seats left</span>
+            </div>
+          </div>
+          <div class="sc-action"><button class="btn btn-ghost btn-sm">Book · 1 credit</button></div>
+        </div>
+
+        <div class="schedule-class">
+          <div class="sc-time"><div class="t">09:30</div><div class="d">50 min</div></div>
+          <div class="sc-info">
+            <div class="nm">Power Reform</div>
+            <div class="lv">Advanced</div>
+            <div class="ts">
+              <span class="dot">SD</span> Selin Demir
+              <span class="seats">· 4 seats left</span>
+            </div>
+          </div>
+          <div class="sc-action"><button class="btn btn-ghost btn-sm">Book · 1 credit</button></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <h3>Upcoming bookings</h3>
+        <a class="lnk">View all (4)</a>
+      </div>
+      <div class="panel-body">
+        <div class="booking-row">
+          <div class="br-date"><div class="m">May</div><div class="d">05</div></div>
+          <div class="br-info">
+            <div class="nm">Reformer Sculpt</div>
+            <div class="mt">Today · 18:00 · Yara N.</div>
+          </div>
+          <span class="br-status ok">Today</span>
+        </div>
+        <div class="booking-row">
+          <div class="br-date"><div class="m">May</div><div class="d">07</div></div>
+          <div class="br-info">
+            <div class="nm">Reformer Flow</div>
+            <div class="mt">Thu · 07:00 · Salma R.</div>
+          </div>
+          <span class="br-status ok">Confirmed</span>
+        </div>
+        <div class="booking-row">
+          <div class="br-date"><div class="m">May</div><div class="d">08</div></div>
+          <div class="br-info">
+            <div class="nm">Reformer Foundations</div>
+            <div class="mt">Fri · 08:00 · Farah K.</div>
+          </div>
+          <span class="br-status wait">Waitlist · 2</span>
+        </div>
+        <div class="booking-row">
+          <div class="br-date"><div class="m">May</div><div class="d">10</div></div>
+          <div class="br-info">
+            <div class="nm">Stretch &amp; Release</div>
+            <div class="mt">Sun · 10:00 · Salma R.</div>
+          </div>
+          <span class="br-status ok">Confirmed</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACKS -->
+  <section style="margin-bottom: 32px;">
+    <div class="section-head">
+      <h2 class="display">Active packages</h2>
+      <a>Manage packages →</a>
+    </div>
+    <div class="packs-grid">
+      <div class="pack-card featured">
+        <div class="pack-eyebrow">Primary pack</div>
+        <div class="pack-name">10-class reformer</div>
+        <div class="pack-progress">
+          <div class="pack-ring" style="--p: 70"><span class="pack-ring-num">7</span></div>
+          <div class="pack-detail">
+            <div class="left">7 classes <small>/ 10</small></div>
+            <div class="exp">Expires 23 May · 18 days left</div>
+          </div>
+        </div>
+        <div class="pack-foot">
+          <span class="pack-tag">Reformer</span>
+          <span class="pack-tag">Personal</span>
+          <span class="pack-tag">Auto-renew</span>
+        </div>
+      </div>
+
+      <div class="pack-card">
+        <div class="pack-eyebrow">Family pack</div>
+        <div class="pack-name">5-class mat pack</div>
+        <div class="pack-progress">
+          <div class="pack-ring" style="--p: 100"><span class="pack-ring-num">5</span></div>
+          <div class="pack-detail">
+            <div class="left">5 classes <small>/ 5</small></div>
+            <div class="exp" style="color: var(--ink-3);">Expires 14 Aug</div>
+          </div>
+        </div>
+        <div class="pack-foot">
+          <span class="pack-tag">Mat</span>
+          <span class="pack-tag">Family · 4</span>
+          <span class="pack-tag">Transferable</span>
+        </div>
+      </div>
+
+      <div class="pack-card upsell">
+        <div class="pack-eyebrow">Recommended</div>
+        <div class="pack-name">Monthly unlimited</div>
+        <div class="upsell-body">
+          Based on your pace (8 classes/month), unlimited would save you <b>~KWD 32</b> compared to renewing your 10-pack.
+        </div>
+        <button class="btn btn-primary btn-sm">Upgrade for KWD 110/mo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVITY -->
+  <section class="activity">
+    <div class="section-head" style="margin-bottom: 20px;">
+      <h2 class="display">Your practice</h2>
+      <a>Full history →</a>
+    </div>
+    <div class="activity-grid">
+      <div>
+        <div class="activity-list">
+          <div class="activity-item">
+            <div class="activity-icon">
+              <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+            </div>
+            <div class="activity-info">
+              <div class="nm">Reformer Flow · attended</div>
+              <div class="when">Sun 3 May · 09:30 · Lara M.</div>
+              <div class="desc">"Great class today, you nailed the long box section. Try adding the magic circle next time."</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">
+              <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+            </div>
+            <div class="activity-info">
+              <div class="nm">Reformer Sculpt · attended</div>
+              <div class="when">Fri 1 May · 18:00 · Yara N.</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon brand">
+              <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            </div>
+            <div class="activity-info">
+              <div class="nm">10-class pack purchased</div>
+              <div class="when">Tue 28 Apr · KWD 90 · Auto-renew on</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon">
+              <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+            </div>
+            <div class="activity-info">
+              <div class="nm">Power House Reform · attended</div>
+              <div class="when">Mon 27 Apr · 10:00 · Selin D.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="streak-viz">
+        <div class="streak-num display">12</div>
+        <div class="streak-lbl">week streak — your longest yet</div>
+        <div class="streak-grid">
+          <div class="streak-cell l1"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l1"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l1"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l1"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l3"></div>
+          <div class="streak-cell l2"></div>
+          <div class="streak-cell"></div>
+        </div>
+        <div class="streak-axis">
+          <span>14 weeks ago</span>
+          <span>This week</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+</body>
+</html>

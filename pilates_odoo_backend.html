@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Module — Odoo Backend Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --odoo-purple: #714B67;
+    --odoo-purple-dark: #5C3D54;
+    --odoo-purple-light: #875A7B;
+    --odoo-purple-tint: #F2EAEF;
+    --bg: #F0F0F0;
+    --surface: #FFFFFF;
+    --surface-2: #F8F8F8;
+    --ink: #212529;
+    --ink-2: #495057;
+    --ink-3: #74788D;
+    --ink-4: #ADB5BD;
+    --line: #DEE2E6;
+    --line-soft: #E9ECEF;
+    --link: #017E84;
+    --link-hover: #015A5F;
+    --success: #28A745;
+    --success-bg: #E8F5E9;
+    --warn: #FF9800;
+    --warn-bg: #FFF3E0;
+    --danger: #DC3545;
+    --danger-bg: #FCE8E9;
+    --info-bg: #E3F2FD;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.4;
+    font-size: 13px;
+  }
+
+  .proto-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: #1A1A1A; color: white;
+    padding: 9px 24px; font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .proto-page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+
+  .proto-section-label {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .proto-section-label .num {
+    font-weight: 700;
+    color: var(--odoo-purple);
+  }
+  .proto-section-label .desc {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-left: auto;
+    max-width: 50%;
+    text-align: right;
+  }
+
+  /* Odoo chrome wrapper */
+  .odoo-app {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px -4px rgba(33,37,41,0.1);
+  }
+
+  /* TOP NAV BAR (Odoo style) */
+  .odoo-nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding: 0 16px;
+    display: flex; align-items: center;
+    height: 46px;
+    gap: 16px;
+  }
+  .odoo-apps-icon {
+    width: 28px; height: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .odoo-apps-icon i {
+    background: var(--ink-3);
+    border-radius: 1px;
+  }
+  .odoo-apps-icon:hover i { background: var(--odoo-purple); }
+  .odoo-module {
+    color: var(--odoo-purple);
+    font-weight: 600;
+    font-size: 13px;
+    border-right: 1px solid var(--line);
+    padding-right: 16px;
+  }
+  .odoo-breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px;
+    color: var(--ink-2);
+    flex: 1;
+  }
+  .odoo-breadcrumb a {
+    color: var(--ink-2);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .odoo-breadcrumb a:hover { color: var(--odoo-purple); }
+  .odoo-breadcrumb .sep { color: var(--ink-4); }
+  .odoo-breadcrumb .current { color: var(--ink); font-weight: 500; }
+  .odoo-search {
+    width: 280px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 6px 12px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--ink-3);
+  }
+  .odoo-search input {
+    border: none; background: transparent;
+    flex: 1; font-family: inherit; font-size: 12px;
+    outline: none;
+    color: var(--ink);
+  }
+  .odoo-nav-icons {
+    display: flex; align-items: center; gap: 4px;
+  }
+  .odoo-icon-btn {
+    width: 30px; height: 30px;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+    color: var(--ink-2);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .odoo-icon-btn:hover { background: var(--surface-2); }
+  .odoo-icon-btn .dot {
+    position: absolute; top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    background: var(--danger);
+    border-radius: 50%;
+    border: 1.5px solid var(--surface);
+  }
+  .odoo-user-pill {
+    display: flex; align-items: center; gap: 8px;
+    padding: 4px 10px 4px 4px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .odoo-user-pill:hover { background: var(--surface-2); }
+  .odoo-user-pill .av {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--odoo-purple);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600;
+  }
+  .odoo-user-pill .nm { font-size: 12px; color: var(--ink-2); }
+
+  /* ACTION BAR */
+  .odoo-action-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding: 8px 16px;
+    display: flex; align-items: center;
+    gap: 12px;
+  }
+  .odoo-action-bar .new-btn {
+    background: var(--odoo-purple);
+    color: white;
+    border: 1px solid var(--odoo-purple);
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .odoo-action-bar .new-btn:hover { background: var(--odoo-purple-dark); }
+  .odoo-action-bar .crumb-text {
+    color: var(--ink-2);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .odoo-action-bar .crumb-text b { color: var(--ink); }
+  .odoo-action-bar .spacer { flex: 1; }
+  .odoo-pager {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .odoo-pager span { font-variant-numeric: tabular-nums; }
+  .odoo-pager .pg-btn {
+    width: 24px; height: 24px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-2);
+  }
+  .odoo-pager .pg-btn:hover { background: var(--surface-2); }
+  .odoo-view-switcher {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .odoo-view-switcher .vbtn {
+    padding: 5px 8px;
+    background: var(--surface);
+    border: none;
+    color: var(--ink-3);
+    cursor: pointer;
+    border-right: 1px solid var(--line);
+  }
+  .odoo-view-switcher .vbtn:last-child { border-right: none; }
+  .odoo-view-switcher .vbtn.active { background: var(--surface-2); color: var(--odoo-purple); }
+  .odoo-view-switcher .vbtn:hover:not(.active) { background: var(--surface-2); }
+
+  /* SEARCH/FILTER ROW */
+  .odoo-search-row {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding: 8px 16px;
+    display: flex; align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .odoo-facet {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+    font-size: 12px;
+  }
+  .odoo-facet .key {
+    background: var(--odoo-purple);
+    color: white;
+    padding: 3px 8px;
+    font-weight: 500;
+  }
+  .odoo-facet .val {
+    background: var(--surface);
+    padding: 3px 8px;
+    color: var(--ink);
+    border-right: 1px solid var(--line);
+  }
+  .odoo-facet .x {
+    background: var(--surface);
+    padding: 3px 6px;
+    color: var(--ink-3);
+    cursor: pointer;
+  }
+  .odoo-facet .x:hover { color: var(--danger); }
+
+  .odoo-search-input {
+    flex: 1;
+    min-width: 200px;
+    border: none;
+    background: transparent;
+    padding: 4px 8px;
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+  }
+
+  /* ============ KANBAN VIEW ============ */
+  .odoo-kanban {
+    background: var(--bg);
+    padding: 14px;
+    min-height: 500px;
+  }
+  .odoo-kanban-group-head {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .odoo-kanban-group-head .count {
+    background: var(--ink-4);
+    color: white;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .odoo-kanban-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .k-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px;
+    cursor: pointer;
+    transition: box-shadow 0.15s;
+    border-left: 3px solid var(--odoo-purple);
+  }
+  .k-card.draft { border-left-color: var(--ink-4); }
+  .k-card.live { border-left-color: var(--success); background: var(--success-bg); }
+  .k-card.full { border-left-color: var(--warn); }
+  .k-card.cancelled { opacity: 0.6; border-left-color: var(--danger); }
+  .k-card:hover { box-shadow: 0 4px 14px -4px rgba(33,37,41,0.18); }
+  .k-card-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .k-card-time {
+    font-weight: 600;
+    color: var(--odoo-purple);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .k-card.live .k-card-time { color: var(--success); }
+  .k-card-state {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 600;
+  }
+  .k-card-state.draft { background: var(--surface-2); color: var(--ink-3); }
+  .k-card-state.confirmed { background: var(--info-bg); color: var(--link); }
+  .k-card-state.live { background: var(--success); color: white; animation: livePulse 2s infinite; }
+  @keyframes livePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  .k-card-state.full { background: var(--warn-bg); color: #B26800; }
+  .k-card-state.cancelled { background: var(--danger-bg); color: var(--danger); }
+  .k-card-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .k-card-meta {
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-bottom: 10px;
+  }
+  .k-card-meta .sep { color: var(--ink-4); margin: 0 4px; }
+  .k-card-cap {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .k-card-cap .bar {
+    flex: 1;
+    height: 6px;
+    background: var(--surface-2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .k-card-cap .bar i {
+    display: block;
+    height: 100%;
+    background: var(--odoo-purple);
+  }
+  .k-card.live .k-card-cap .bar i { background: var(--success); }
+  .k-card.full .k-card-cap .bar i { background: var(--warn); }
+  .k-card-cap .num { font-weight: 600; }
+  .k-card-foot {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .k-card-foot .av-mini {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--odoo-purple-tint);
+    color: var(--odoo-purple-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .k-card-foot .actions { margin-left: auto; display: flex; gap: 6px; }
+  .k-card-foot .a-btn {
+    width: 22px; height: 22px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-3);
+  }
+  .k-card-foot .a-btn:hover { background: var(--odoo-purple); color: white; border-color: var(--odoo-purple); }
+
+  /* ============ FORM VIEW ============ */
+  .odoo-form {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    min-height: 700px;
+  }
+  .odoo-form-main {
+    padding: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--line);
+  }
+  .odoo-form-status {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding: 0 24px;
+  }
+  .odoo-form-status .stage {
+    padding: 10px 14px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    position: relative;
+    cursor: pointer;
+  }
+  .odoo-form-status .stage::after {
+    content: '';
+    position: absolute;
+    left: 50%; bottom: 0;
+    width: 0; height: 0;
+    background: var(--odoo-purple);
+  }
+  .odoo-form-status .stage.active {
+    color: var(--odoo-purple);
+  }
+  .odoo-form-status .stage.active::after {
+    width: calc(100% - 28px);
+    height: 2px;
+    left: 14px;
+  }
+  .odoo-form-status .stage .arrow {
+    margin: 0 8px;
+    color: var(--ink-4);
+  }
+
+  .odoo-form-header {
+    padding: 16px 24px 0;
+    display: flex; gap: 24px;
+    align-items: flex-start;
+    background: var(--surface);
+  }
+  .odoo-form-title {
+    flex: 1;
+  }
+  .odoo-form-title .label {
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .odoo-form-title h1 {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .odoo-form-title .sub {
+    font-size: 13px;
+    color: var(--ink-2);
+    margin-top: 4px;
+  }
+
+  /* Smart buttons */
+  .odoo-smart-buttons {
+    display: flex;
+    gap: 0;
+  }
+  .odoo-smart-btn {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    cursor: pointer;
+    text-align: center;
+    margin-right: -1px;
+    min-width: 90px;
+  }
+  .odoo-smart-btn:first-child { border-radius: 4px 0 0 4px; }
+  .odoo-smart-btn:last-child { border-radius: 0 4px 4px 0; }
+  .odoo-smart-btn:hover { background: var(--surface-2); }
+  .odoo-smart-btn .ico {
+    color: var(--odoo-purple);
+    font-weight: 700;
+  }
+  .odoo-smart-btn .num {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .odoo-smart-btn .lbl {
+    font-size: 11px;
+    color: var(--ink-2);
+    margin-top: 2px;
+  }
+
+  .odoo-form-body {
+    padding: 24px;
+  }
+  .odoo-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px 32px;
+    margin-bottom: 28px;
+  }
+  .odoo-form-group {
+    display: flex; flex-direction: column;
+    gap: 12px;
+  }
+  .odoo-form-field {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    align-items: baseline;
+    gap: 12px;
+    padding: 4px 0;
+    font-size: 13px;
+  }
+  .odoo-form-field .lbl {
+    color: var(--ink-2);
+    font-weight: 400;
+  }
+  .odoo-form-field .val {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .odoo-form-field .val a {
+    color: var(--link);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--link);
+  }
+  .odoo-form-field .val a:hover { color: var(--link-hover); }
+  .odoo-form-field .val.editable {
+    border-bottom: 1px dotted var(--ink-4);
+    cursor: text;
+  }
+  .odoo-form-field .val.editable:hover {
+    border-bottom-color: var(--odoo-purple);
+  }
+  .odoo-form-field .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .odoo-form-field .badge.ok { background: var(--success-bg); color: var(--success); }
+  .odoo-form-field .badge.warn { background: var(--warn-bg); color: #B26800; }
+  .odoo-form-field .badge.info { background: var(--info-bg); color: var(--link); }
+
+  /* Notebook */
+  .odoo-notebook {
+    border-top: 1px solid var(--line);
+    padding-top: 0;
+  }
+  .odoo-notebook-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 16px;
+  }
+  .odoo-notebook-tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--ink-2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    border-top: none; border-left: none; border-right: none;
+    font-family: inherit;
+  }
+  .odoo-notebook-tab.active {
+    color: var(--odoo-purple);
+    border-bottom-color: var(--odoo-purple);
+    font-weight: 500;
+  }
+  .odoo-notebook-tab .count {
+    background: var(--surface-2);
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 11px;
+    margin-left: 6px;
+  }
+
+  /* Attendees table */
+  .attendees-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .attendees-table thead th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--surface-2);
+    color: var(--ink-2);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .attendees-table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line-soft);
+    vertical-align: middle;
+  }
+  .attendees-table tbody tr:hover { background: var(--surface-2); }
+  .attendees-table .member-cell {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .attendees-table .av-mem {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--odoo-purple-tint);
+    color: var(--odoo-purple-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+  }
+  .attendees-table .member-cell .nm a {
+    color: var(--link);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .attendees-table .member-cell .nm a:hover { text-decoration: underline; }
+  .attendees-table .member-cell .em {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 1px;
+  }
+  .pack-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--info-bg);
+    color: var(--link);
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .status-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .status-tag.checked { background: var(--success-bg); color: var(--success); }
+  .status-tag.booked { background: var(--info-bg); color: var(--link); }
+  .status-tag.waitlist { background: var(--warn-bg); color: #B26800; }
+  .status-tag.no-show { background: var(--danger-bg); color: var(--danger); }
+  .check-btn {
+    padding: 4px 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--ink-2);
+    font-family: inherit;
+  }
+  .check-btn:hover {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+  }
+  .check-btn.checked {
+    background: var(--success);
+    border-color: var(--success);
+    color: white;
+  }
+  .row-action {
+    color: var(--ink-3);
+    cursor: pointer;
+    padding: 4px;
+  }
+  .row-action:hover { color: var(--odoo-purple); }
+
+  /* Chatter (right side) */
+  .odoo-chatter {
+    background: var(--surface-2);
+    padding: 16px 20px;
+    overflow-y: auto;
+  }
+  .chatter-actions {
+    display: flex; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .chatter-btn {
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--ink-2);
+    cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .chatter-btn:hover { background: var(--surface-2); border-color: var(--ink-4); }
+  .chatter-followers {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .chatter-followers .av-stack {
+    display: flex;
+  }
+  .chatter-followers .av-stack .av-cf {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--odoo-purple);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+    border: 2px solid var(--surface-2);
+    margin-left: -6px;
+  }
+  .chatter-followers .av-stack .av-cf:first-child { margin-left: 0; }
+  .chatter-msg {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex; gap: 10px;
+  }
+  .chatter-msg .av-cm {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--ink-4);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .chatter-msg.system .av-cm {
+    background: var(--odoo-purple);
+  }
+  .chatter-msg .body { flex: 1; }
+  .chatter-msg .author {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .chatter-msg .when {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .chatter-msg .text {
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+  .chatter-msg .text .change {
+    background: var(--info-bg);
+    color: var(--link);
+    padding: 1px 5px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .ico { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <span>Visual prototype · Odoo backend · studio_core / studio_booking module</span>
+  <span>Native Odoo Enterprise 19 chrome</span>
+</div>
+
+<div class="proto-page">
+
+  <!-- ============ KANBAN VIEW ============ -->
+  <div class="proto-section-label">
+    <span class="num">A</span>
+    <span>Class sessions — kanban view</span>
+    <span class="desc">Daily ops view. Live state, capacity at a glance, one-click into the session form.</span>
+  </div>
+
+  <div class="odoo-app">
+    <!-- Top nav -->
+    <div class="odoo-nav">
+      <div class="odoo-apps-icon"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="odoo-module">Studio</div>
+      <div class="odoo-breadcrumb">
+        <a>Sessions</a>
+      </div>
+      <div class="odoo-search">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input value="Today · Reformer Room" />
+      </div>
+      <div class="odoo-nav-icons">
+        <button class="odoo-icon-btn" title="Discuss">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="dot"></span>
+        </button>
+        <button class="odoo-icon-btn" title="Activities">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </button>
+        <div class="odoo-user-pill">
+          <div class="av">FA</div>
+          <span class="nm">Fatima Al-Otaibi</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action bar -->
+    <div class="odoo-action-bar">
+      <button class="new-btn">+ New</button>
+      <span class="crumb-text">Sessions <b>· Today</b></span>
+      <span class="spacer"></span>
+      <div class="odoo-pager">
+        <span>1-12 / 28</span>
+        <button class="pg-btn">
+          <svg class="ico" viewBox="0 0 24 24" style="width:10px;height:10px;"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="pg-btn">
+          <svg class="ico" viewBox="0 0 24 24" style="width:10px;height:10px;"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <div class="odoo-view-switcher">
+        <button class="vbtn" title="List">
+          <svg class="ico" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </button>
+        <button class="vbtn active" title="Kanban">
+          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </button>
+        <button class="vbtn" title="Calendar">
+          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search/filter row -->
+    <div class="odoo-search-row">
+      <span class="odoo-facet">
+        <span class="key">Date</span>
+        <span class="val">Today · 5 May 2026</span>
+        <span class="x">×</span>
+      </span>
+      <span class="odoo-facet">
+        <span class="key">Zone</span>
+        <span class="val">Reformer Room</span>
+        <span class="x">×</span>
+      </span>
+      <span class="odoo-facet">
+        <span class="key">State</span>
+        <span class="val">Confirmed, Live</span>
+        <span class="x">×</span>
+      </span>
+      <input class="odoo-search-input" placeholder="Search class type, instructor, member…" />
+    </div>
+
+    <!-- Kanban -->
+    <div class="odoo-kanban">
+      <div class="odoo-kanban-group-head">Today · Tuesday 5 May <span class="count">12</span></div>
+      <div class="odoo-kanban-grid">
+
+        <div class="k-card live">
+          <div class="k-card-head">
+            <span class="k-card-time">07:00</span>
+            <span class="k-card-state live">Live now</span>
+          </div>
+          <div class="k-card-name">Reformer Foundations</div>
+          <div class="k-card-meta">Beginners <span class="sep">·</span> 50 min <span class="sep">·</span> Studio A</div>
+          <div class="k-card-cap">
+            <div class="bar"><i style="width: 75%"></i></div>
+            <span class="num">9 / 12</span>
+          </div>
+          <div class="k-card-foot">
+            <span class="av-mini">DA</span>
+            <span>Dina Alami</span>
+            <div class="actions">
+              <button class="a-btn" title="Open roster">
+                <svg class="ico" viewBox="0 0 24 24" style="width:11px;height:11px;"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="7" r="4"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="k-card">
+          <div class="k-card-head">
+            <span class="k-card-time">10:00</span>
+            <span class="k-card-state confirmed">Confirmed</span>
+          </div>
+          <div class="k-card-name">Pre/postnatal</div>
+          <div class="k-card-meta">Beginners <span class="sep">·</span> 50 min <span class="sep">·</span> Studio A</div>
+          <div class="k-card-cap">
+            <div class="bar"><i style="width: 50%"></i></div>
+            <span class="num">6 / 12</span>
+          </div>
+          <div class="k-card-foot">
+            <span class="av-mini">DA</span>
+            <span>Dina Alami</span>
+          </div>
+        </div>
+
+        <div class="k-card">
+          <div class="k-card-head">
+            <span class="k-card-time">11:00</span>
+            <span class="k-card-state confirmed">Confirmed</span>
+          </div>
+          <div class="k-card-name">Power Reform</div>
+          <div class="k-card-meta">Advanced <span class="sep">·</span> 50 min <span class="sep">·</span> Studio A</div>
+          <div class="k-card-cap">
+            <div class="bar"><i style="width: 83%"></i></div>
+            <span class="num">10 / 12</span>
+          </div>
+          <div class="k-card-foot">
+            <span class="av-mini">SD</span>
+            <span>Selin Demir</span>
+          </div>
+        </div>
+
+        <div class="k-card">
+          <div class="k-card-head">
+            <span class="k-card-time">12:30</span>
+            <span class="k-card-state confirmed">Confirmed</span>
+          </div>
+          <div class="k-card-name">Stretch &amp; Release</div>
+          <div class="k-card-meta">All levels <span class="sep">·</span> 45 min <span class="sep">·</span> Studio B</div>
+          <div class="k-card-cap">
+            <div class="bar"><i style="width: 33%"></i></div>
+            <span class="num">4 / 12</span>
+          </div>
+          <div class="k-card-foot">
+            <span class="av-mini">LM</span>
+            <span>Lara Mansour</span>
+          </div>
+        </div>
+
+        <div class="k-card full">
+          <div class="k-card-head">
+            <span class="k-card-time">18:00</span>
+            <span class="k-card-state full">Full · 2 wait</span>
+          </div>
+          <div class="k-card-name">Reformer Sculpt</div>
+          <div class="k-card-meta">Intermediate <span class="sep">·</span> 50 min <span class="sep">·</span> Studio A</div>
+          <div class="k-card-cap">
+            <div class="bar"><i style="width: 100%"></i></div>
+            <span class="num">12 / 12</span>
+          </div>
+          <div class="k-card-foot">
+            <span class="av-mini">YN</span>
+            <span>Yara Nasser</span>
+          </div>
+        </div>
+
+        <div class="k-card">
+          <div class="k-card-head">
+            <span class="k-card-time">19:30</span>
+            <span class="k-card-state confirmed">Confirmed</span>
+          </div>
+          <div class="k-card-name">Tower &amp; Mat</div>
+          <div class="k-card-meta">All levels <span class="sep">·</span> 50 min <span class="sep">·</span> Studio B</div>
+          <div class="k-card-cap">
+            <div class="bar"><i style="width: 92%"></i></div>
+            <span class="num">11 / 12</span>
+          </div>
+          <div class="k-card-foot">
+            <span class="av-mini">SR</span>
+            <span>Salma Rashid</span>
+          </div>
+        </div>
+
+        <div class="k-card cancelled">
+          <div class="k-card-head">
+            <span class="k-card-time">20:30</span>
+            <span class="k-card-state cancelled">Cancelled</span>
+          </div>
+          <div class="k-card-name">Cadillac Privates</div>
+          <div class="k-card-meta">All levels <span class="sep">·</span> 60 min <span class="sep">·</span> Studio A</div>
+          <div class="k-card-cap">
+            <div class="bar"><i style="width: 0%"></i></div>
+            <span class="num">0 / 1</span>
+          </div>
+          <div class="k-card-foot">
+            <span style="color: var(--danger);">Instructor sick · re-booked members</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FORM VIEW ============ -->
+  <div class="proto-section-label">
+    <span class="num">B</span>
+    <span>Class session form — with attendee roster &amp; check-in</span>
+    <span class="desc">Single source of truth for a session: capacity, attendees, waitlist, audit trail. Staff check members in here at the door.</span>
+  </div>
+
+  <div class="odoo-app">
+    <!-- Top nav -->
+    <div class="odoo-nav">
+      <div class="odoo-apps-icon"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="odoo-module">Studio</div>
+      <div class="odoo-breadcrumb">
+        <a>Sessions</a>
+        <span class="sep">›</span>
+        <span class="current">Reformer Sculpt · 18:00</span>
+      </div>
+      <div class="odoo-search" style="visibility: hidden;"></div>
+      <div class="odoo-nav-icons">
+        <button class="odoo-icon-btn"><svg class="ico" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+        <div class="odoo-user-pill"><div class="av">FA</div><span class="nm">Fatima Al-Otaibi</span></div>
+      </div>
+    </div>
+
+    <!-- Action bar -->
+    <div class="odoo-action-bar">
+      <button class="new-btn">+ New</button>
+      <span class="crumb-text">Sessions / <b>Reformer Sculpt · 18:00</b></span>
+      <span class="spacer"></span>
+      <div class="odoo-pager">
+        <span>5 / 28</span>
+        <button class="pg-btn"><svg class="ico" viewBox="0 0 24 24" style="width:10px;height:10px;"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button class="pg-btn"><svg class="ico" viewBox="0 0 24 24" style="width:10px;height:10px;"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="odoo-form-status">
+      <div class="stage">Draft</div>
+      <div class="stage">Scheduled</div>
+      <div class="stage active">Confirmed</div>
+      <div class="stage">Live</div>
+      <div class="stage">Done</div>
+    </div>
+
+    <!-- Form body + chatter -->
+    <div class="odoo-form">
+      <div class="odoo-form-main">
+        <div class="odoo-form-header">
+          <div class="odoo-form-title">
+            <div class="label">Class session</div>
+            <h1>Reformer Sculpt</h1>
+            <div class="sub">Intermediate · 50 min · Tuesday 5 May 2026 · 18:00 — 18:50</div>
+          </div>
+          <div class="odoo-smart-buttons">
+            <div class="odoo-smart-btn">
+              <span class="ico">●</span>
+              <span class="num">12</span>
+              <span class="lbl">Booked</span>
+            </div>
+            <div class="odoo-smart-btn">
+              <span class="ico">●</span>
+              <span class="num">2</span>
+              <span class="lbl">Waitlist</span>
+            </div>
+            <div class="odoo-smart-btn">
+              <span class="ico">✓</span>
+              <span class="num">0</span>
+              <span class="lbl">Checked in</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="odoo-form-body">
+          <div class="odoo-form-grid">
+            <div class="odoo-form-group">
+              <div class="odoo-form-field">
+                <span class="lbl">Class type</span>
+                <span class="val"><a>Reformer Sculpt</a></span>
+              </div>
+              <div class="odoo-form-field">
+                <span class="lbl">Instructor</span>
+                <span class="val"><a>Yara Nasser</a></span>
+              </div>
+              <div class="odoo-form-field">
+                <span class="lbl">Room</span>
+                <span class="val"><a>Studio A</a></span>
+              </div>
+              <div class="odoo-form-field">
+                <span class="lbl">Equipment</span>
+                <span class="val">12 reformers + boxes</span>
+              </div>
+              <div class="odoo-form-field">
+                <span class="lbl">Generated from</span>
+                <span class="val"><a>Tue 18:00 Reformer Sculpt (template)</a></span>
+              </div>
+            </div>
+
+            <div class="odoo-form-group">
+              <div class="odoo-form-field">
+                <span class="lbl">Date / time</span>
+                <span class="val editable">05/05/2026 18:00</span>
+              </div>
+              <div class="odoo-form-field">
+                <span class="lbl">Duration</span>
+                <span class="val editable">50 minutes</span>
+              </div>
+              <div class="odoo-form-field">
+                <span class="lbl">Capacity</span>
+                <span class="val editable">12</span>
+              </div>
+              <div class="odoo-form-field">
+                <span class="lbl">Booking opens</span>
+                <span class="val">7 days before · 28 Apr 18:00</span>
+              </div>
+              <div class="odoo-form-field">
+                <span class="lbl">Cancel cutoff</span>
+                <span class="val">4 hours before · today 14:00 <span class="badge warn">Phase 2</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notebook -->
+          <div class="odoo-notebook">
+            <div class="odoo-notebook-tabs">
+              <button class="odoo-notebook-tab active">Attendees<span class="count">12</span></button>
+              <button class="odoo-notebook-tab">Waitlist<span class="count">2</span></button>
+              <button class="odoo-notebook-tab">History</button>
+              <button class="odoo-notebook-tab">Compensation</button>
+            </div>
+
+            <table class="attendees-table">
+              <thead>
+                <tr>
+                  <th>Member</th>
+                  <th>Booked from</th>
+                  <th>Reformer</th>
+                  <th>Status</th>
+                  <th>Check-in</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <div class="av-mem">SK</div>
+                      <div>
+                        <div class="nm"><a>Sarah Khalil</a></div>
+                        <div class="em">sarah.k@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="pack-tag">10-pack</span></td>
+                  <td>Reformer 03</td>
+                  <td><span class="status-tag booked">Booked</span></td>
+                  <td><button class="check-btn">Check in</button></td>
+                  <td><span class="row-action">⋯</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <div class="av-mem" style="background: #E1D5E7; color: var(--odoo-purple-dark);">NH</div>
+                      <div>
+                        <div class="nm"><a>Noor Hassan</a></div>
+                        <div class="em">noor.h@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="pack-tag">Unlimited</span></td>
+                  <td>Reformer 01</td>
+                  <td><span class="status-tag checked"><svg class="ico" viewBox="0 0 24 24" style="width:10px;height:10px;"><polyline points="4 12 10 18 20 6"/></svg> Checked in</span></td>
+                  <td><button class="check-btn checked">✓ 17:54</button></td>
+                  <td><span class="row-action">⋯</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <div class="av-mem">RM</div>
+                      <div>
+                        <div class="nm"><a>Reem Al-Mutairi</a></div>
+                        <div class="em">reem.am@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="pack-tag">10-pack</span></td>
+                  <td>Reformer 02</td>
+                  <td><span class="status-tag checked"><svg class="ico" viewBox="0 0 24 24" style="width:10px;height:10px;"><polyline points="4 12 10 18 20 6"/></svg> Checked in</span></td>
+                  <td><button class="check-btn checked">✓ 17:55</button></td>
+                  <td><span class="row-action">⋯</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <div class="av-mem" style="background: #FCE4E5; color: var(--danger);">DM</div>
+                      <div>
+                        <div class="nm"><a>Dana Mokhtar</a></div>
+                        <div class="em">dana.m@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="pack-tag">5-pack family</span></td>
+                  <td>Reformer 04</td>
+                  <td><span class="status-tag booked">Booked</span></td>
+                  <td><button class="check-btn">Check in</button></td>
+                  <td><span class="row-action">⋯</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <div class="av-mem">AT</div>
+                      <div>
+                        <div class="nm"><a>Aisha Tariq</a></div>
+                        <div class="em">aisha.t@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="pack-tag">10-pack</span></td>
+                  <td>Reformer 05</td>
+                  <td><span class="status-tag booked">Booked</span></td>
+                  <td><button class="check-btn">Check in</button></td>
+                  <td><span class="row-action">⋯</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="member-cell">
+                      <div class="av-mem">LF</div>
+                      <div>
+                        <div class="nm"><a>Layla Faisal</a></div>
+                        <div class="em">layla.f@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="pack-tag">Unlimited</span></td>
+                  <td>Reformer 06</td>
+                  <td><span class="status-tag booked">Booked</span></td>
+                  <td><button class="check-btn">Check in</button></td>
+                  <td><span class="row-action">⋯</span></td>
+                </tr>
+                <tr style="background: var(--surface-2); font-style: italic;">
+                  <td colspan="6" style="text-align: center; padding: 8px; color: var(--ink-3); font-size: 12px;">+ 6 more attendees · <a style="color: var(--link); cursor: pointer; font-style: normal;">show all</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chatter -->
+      <div class="odoo-chatter">
+        <div class="chatter-actions">
+          <button class="chatter-btn">
+            <svg class="ico" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Send message
+          </button>
+          <button class="chatter-btn">
+            <svg class="ico" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Log note
+          </button>
+          <button class="chatter-btn">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Activity
+          </button>
+        </div>
+
+        <div class="chatter-followers">
+          <span>Followers</span>
+          <span class="av-stack">
+            <span class="av-cf">FA</span>
+            <span class="av-cf" style="background: #875A7B;">YN</span>
+            <span class="av-cf" style="background: #017E84;">+3</span>
+          </span>
+          <a style="margin-left: auto; color: var(--link); font-size: 11px; text-decoration: none; cursor: pointer;">5 followers</a>
+        </div>
+
+        <div class="chatter-msg system">
+          <div class="av-cm">FA</div>
+          <div class="body">
+            <div class="author">Fatima Al-Otaibi <span class="when">— 17:55 (5 min ago)</span></div>
+            <div class="text">Marked <strong>Noor Hassan</strong> and <strong>Reem Al-Mutairi</strong> as checked in.</div>
+          </div>
+        </div>
+
+        <div class="chatter-msg system">
+          <div class="av-cm">⚙</div>
+          <div class="body">
+            <div class="author">System <span class="when">— 17:30</span></div>
+            <div class="text">Session state changed: <span class="change">Scheduled</span> → <span class="change">Confirmed</span>. 30-minute reminder sent to all 12 booked members.</div>
+          </div>
+        </div>
+
+        <div class="chatter-msg system">
+          <div class="av-cm">⚙</div>
+          <div class="body">
+            <div class="author">System <span class="when">— 14:22</span></div>
+            <div class="text"><strong>Lina Yusuf</strong> joined the waitlist (position 2).</div>
+          </div>
+        </div>
+
+        <div class="chatter-msg system">
+          <div class="av-cm">⚙</div>
+          <div class="body">
+            <div class="author">System <span class="when">— 13:10</span></div>
+            <div class="text"><strong>Dana Mokhtar</strong> auto-promoted from waitlist after <strong>Hala Rifai</strong> cancelled. 1 credit consumed from her 5-pack family.</div>
+          </div>
+        </div>
+
+        <div class="chatter-msg system">
+          <div class="av-cm">⚙</div>
+          <div class="body">
+            <div class="author">System <span class="when">— 28 Apr 18:00</span></div>
+            <div class="text">Booking opened. Capacity: 12 reformers.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="proto-section-label" style="margin-top: 40px;">
+    <span class="num">C</span>
+    <span>Other key views (not rendered, summarised)</span>
+    <span class="desc">These follow standard Odoo patterns and are well-understood territory — full mockups optional.</span>
+  </div>
+  <div class="odoo-app" style="padding: 20px 24px; background: var(--surface);">
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; font-size: 13px;">
+      <div>
+        <div style="font-weight: 600; margin-bottom: 8px;">Member form (res.partner extended)</div>
+        <div style="color: var(--ink-2); line-height: 1.6;">Standard partner form + studio tab: emergency contact, health questionnaire, family group, member status. Smart buttons: <span style="color: var(--odoo-purple); font-weight: 500;">Bookings · Packs · Attendance · Lifetime value</span>.</div>
+      </div>
+      <div>
+        <div style="font-weight: 600; margin-bottom: 8px;">Class template form</div>
+        <div style="color: var(--ink-2); line-height: 1.6;">Recurrence rules, default instructor &amp; room, duration, capacity. Cron generates session records on a 60-day rolling horizon. Smart button: <span style="color: var(--odoo-purple); font-weight: 500;">28 upcoming sessions</span>.</div>
+      </div>
+      <div>
+        <div style="font-weight: 600; margin-bottom: 8px;">Pack &amp; contract products</div>
+        <div style="color: var(--ink-2); line-height: 1.6;">Standard <code style="background: var(--surface-2); padding: 1px 4px; font-size: 12px;">product.template</code> with studio fields: pack size, expiry mode, family-shareable, refundable, transferable. Sale order activates a <code style="background: var(--surface-2); padding: 1px 4px; font-size: 12px;">studio.package.credit</code> record.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

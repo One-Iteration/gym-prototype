@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corpo Pilates — Mobile App Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F0F0EE;
+    --surface: #FFFFFF;
+    --surface-2: #F4F4F2;
+    --ink: #0F1115;
+    --ink-2: #4A4F58;
+    --ink-3: #8B8F99;
+    --ink-4: #C4C7CD;
+    --line: #E8E8E5;
+    --line-soft: #F0F0ED;
+    --brand: #FF5722;
+    --brand-dark: #D94315;
+    --brand-tint: #FFE4D6;
+    --success: #00875A;
+    --success-tint: #D6F1E5;
+    --warn: #E5484D;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.4;
+    min-height: 100vh;
+  }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; letter-spacing: -0.02em; }
+
+  .proto-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: var(--ink); color: white;
+    padding: 9px 24px; font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  .page-head {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .page-head h1 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 400;
+    font-size: 56px;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .page-head h1 b { font-weight: 600; color: var(--brand); }
+  .page-head .sub {
+    font-size: 14px;
+    color: var(--ink-2);
+    margin-top: 12px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .phones-row {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .phone-wrap {
+    display: flex; flex-direction: column;
+    align-items: center;
+  }
+  .phone {
+    width: 300px;
+    background: var(--surface);
+    border-radius: 44px;
+    border: 10px solid #1A1A1A;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 30px 80px -30px rgba(15,17,21,0.35),
+                0 12px 24px -12px rgba(15,17,21,0.18);
+  }
+  .phone-screen {
+    height: 640px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    background: var(--surface);
+  }
+  .phone-status {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px 8px;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .phone-status .right {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .phone-status .battery {
+    width: 24px; height: 11px;
+    border: 1.5px solid var(--ink); border-radius: 3px;
+    position: relative;
+    display: inline-block;
+  }
+  .phone-status .battery::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    width: 75%;
+    background: var(--ink);
+    border-radius: 1px;
+  }
+  .phone-status .battery::before {
+    content: '';
+    position: absolute;
+    right: -3px; top: 3px;
+    width: 2px; height: 4px;
+    background: var(--ink);
+    border-radius: 1px;
+  }
+  .phone-status svg { width: 14px; height: 14px; }
+
+  .phone-caption {
+    margin-top: 16px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .phone-caption-sub {
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  /* shared */
+  .ico { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .ico-sm { width: 14px; height: 14px; stroke-width: 2; }
+  .ico-lg { width: 22px; height: 22px; }
+  .av {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--ink); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600;
+    flex-shrink: 0;
+  }
+  .av-brand { background: var(--brand); }
+
+  /* tab bar */
+  .tab-bar {
+    display: flex; justify-content: space-around;
+    padding: 10px 0 16px;
+    border-top: 1px solid var(--line-soft);
+    background: var(--surface);
+  }
+  .tab {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  .tab.active { color: var(--brand); }
+  .tab .ti {
+    width: 22px; height: 22px;
+  }
+
+  /* ============ PHONE 1 — HOME / TODAY ============ */
+  .home-header {
+    padding: 16px 22px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .home-greeting {
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .home-name {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-top: 2px;
+    letter-spacing: -0.01em;
+  }
+  .icon-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    position: relative;
+  }
+  .icon-circle .badge {
+    position: absolute; top: 7px; right: 8px;
+    width: 6px; height: 6px;
+    background: var(--brand);
+    border-radius: 50%;
+  }
+  .home-body { flex: 1; overflow-y: auto; padding: 0 22px; }
+
+  .next-card {
+    background: var(--ink);
+    color: white;
+    border-radius: 24px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .next-card::after {
+    content: '';
+    position: absolute;
+    right: -40px; bottom: -40px;
+    width: 140px; height: 140px;
+    background: var(--brand);
+    border-radius: 50%;
+    opacity: 0.18;
+  }
+  .next-card .label {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand);
+    font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .next-card .pulse {
+    width: 5px; height: 5px;
+    background: var(--brand);
+    border-radius: 50%;
+  }
+  .next-card .name {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1;
+    margin: 10px 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .next-card .when {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 16px;
+  }
+  .next-card .countdown-mini {
+    display: flex; gap: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    position: relative;
+    z-index: 1;
+  }
+  .next-card .cd-block .v {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .next-card .cd-block .l {
+    font-size: 9px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .home-section-h {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin: 8px 0 12px;
+  }
+  .home-section-h .t {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .home-section-h .a {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .stat-pills {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .stat-pill {
+    background: var(--surface-2);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .stat-pill.brand { background: var(--brand-tint); }
+  .stat-pill .v {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .stat-pill.brand .v { color: var(--brand-dark); }
+  .stat-pill .v small { font-size: 12px; color: var(--ink-3); font-weight: 400; }
+  .stat-pill .l {
+    font-size: 10px;
+    color: var(--ink-2);
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+
+  .mini-class {
+    display: flex; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .mini-class:last-child { border-bottom: none; }
+  .mini-class .t-block {
+    width: 46px;
+    flex-shrink: 0;
+  }
+  .mini-class .t-block .h {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .mini-class .t-block .d {
+    font-size: 9px; color: var(--ink-3);
+    letter-spacing: 0.06em;
+    margin-top: 3px;
+    text-transform: uppercase;
+  }
+  .mini-class .info { flex: 1; min-width: 0; }
+  .mini-class .info .nm { font-size: 13px; font-weight: 500; }
+  .mini-class .info .ins { font-size: 11px; color: var(--ink-2); margin-top: 2px; }
+  .mini-class .pill {
+    align-self: flex-start;
+    font-size: 9px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .pill-booked { background: var(--success-tint); color: var(--success); }
+  .pill-open { background: var(--surface-2); color: var(--ink-2); }
+  .pill-warn { background: var(--brand-tint); color: var(--brand-dark); }
+
+  /* ============ PHONE 2 — SCHEDULE BROWSE ============ */
+  .sched-header {
+    padding: 16px 22px 8px;
+  }
+  .sched-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .sched-search {
+    margin-top: 14px;
+    background: var(--surface-2);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--ink-3);
+  }
+  .sched-search input {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    flex: 1;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .sched-day-strip {
+    display: flex; gap: 8px;
+    padding: 14px 22px 12px;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .sched-day-strip::-webkit-scrollbar { display: none; }
+  .day-pill {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--surface-2);
+    min-width: 56px;
+    cursor: pointer;
+  }
+  .day-pill.active {
+    background: var(--brand);
+    color: white;
+  }
+  .day-pill .dow {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--ink-3);
+  }
+  .day-pill.active .dow { color: rgba(255,255,255,0.8); }
+  .day-pill .dom {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 3px;
+    line-height: 1;
+  }
+
+  .filter-chips {
+    display: flex; gap: 6px;
+    padding: 0 22px 12px;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .filter-chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 6px 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-2);
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .chip.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  .sched-list { flex: 1; overflow-y: auto; padding: 0 22px 12px; }
+  .sched-section-h {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+    margin: 12px 0 8px;
+    padding-top: 4px;
+  }
+  .sched-class {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 8px;
+    display: flex; gap: 12px;
+    align-items: center;
+    position: relative;
+  }
+  .sched-class.booked {
+    border-color: var(--success);
+    background: var(--success-tint);
+  }
+  .sched-class .sc-time {
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .sched-class .sc-time .h {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .sched-class .sc-time .m {
+    font-size: 9px;
+    color: var(--ink-3);
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+  }
+  .sched-class .sc-info { flex: 1; min-width: 0; }
+  .sched-class .sc-info .nm { font-size: 13px; font-weight: 500; }
+  .sched-class .sc-info .lv { font-size: 11px; color: var(--ink-2); margin-top: 1px; }
+  .sched-class .sc-info .seats {
+    display: flex; align-items: center; gap: 4px;
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--ink-3);
+  }
+  .sched-class .sc-info .seats .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--success); }
+  .sched-class .sc-info .seats .dot.warn { background: var(--brand); }
+  .sched-class .sc-info .seats.warn { color: var(--brand); font-weight: 500; }
+  .sched-class .arrow {
+    color: var(--ink-3);
+  }
+
+  /* ============ PHONE 3 — CLASS DETAIL ============ */
+  .det-cover {
+    height: 220px;
+    background: linear-gradient(135deg, #FF5722, #D94315);
+    position: relative;
+    overflow: hidden;
+  }
+  .det-cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 80%, rgba(255,255,255,0.18) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0,0,0,0.18) 0%, transparent 50%);
+  }
+  .det-back {
+    position: absolute;
+    top: 16px; left: 16px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    z-index: 2;
+  }
+  .det-share {
+    position: absolute;
+    top: 16px; right: 16px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    z-index: 2;
+  }
+  .det-time-overlay {
+    position: absolute;
+    left: 22px; bottom: 22px;
+    color: white;
+    z-index: 2;
+  }
+  .det-time-overlay .meta {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+  }
+  .det-time-overlay .when {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: -0.01em;
+  }
+  .det-content { padding: 20px 22px 16px; flex: 1; overflow-y: auto; }
+  .det-name {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .det-level {
+    font-size: 12px;
+    color: var(--ink-2);
+    margin-top: 4px;
+  }
+  .det-stats {
+    display: flex; gap: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+    margin: 16px 0;
+  }
+  .det-stat .v {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .det-stat .v.brand { color: var(--brand); }
+  .det-stat .l {
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .det-desc {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+  .det-trainer {
+    display: flex; gap: 12px;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid var(--line-soft);
+    margin-bottom: 12px;
+  }
+  .det-trainer .av {
+    width: 44px; height: 44px;
+    background: var(--brand-tint);
+    color: var(--brand-dark);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .det-trainer .info { flex: 1; }
+  .det-trainer .info .nm { font-size: 13px; font-weight: 500; }
+  .det-trainer .info .ro { font-size: 11px; color: var(--ink-3); margin-top: 2px; letter-spacing: 0.04em; }
+  .det-cap-bar {
+    margin-top: 8px;
+    height: 4px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .det-cap-bar i {
+    display: block; height: 100%;
+    background: var(--brand);
+    border-radius: 2px;
+    width: 75%;
+  }
+  .det-cap-text {
+    display: flex; justify-content: space-between;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 6px;
+  }
+  .det-action-bar {
+    padding: 16px 22px;
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    display: flex; gap: 10px;
+    align-items: center;
+  }
+  .det-action-bar .price {
+    flex: 1;
+  }
+  .det-action-bar .price .v {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .det-action-bar .price .l {
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .det-book-btn {
+    flex: 1;
+    padding: 14px 20px;
+    background: var(--brand);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+  }
+
+  /* ============ PHONE 4 — PROFILE ============ */
+  .prof-top {
+    background: var(--ink);
+    color: white;
+    padding: 24px 22px 60px;
+    position: relative;
+  }
+  .prof-back {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .prof-greet {
+    font-size: 11px;
+    color: var(--brand);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .prof-name {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: -0.01em;
+  }
+  .prof-tier {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 12px;
+    padding: 6px 12px 6px 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.85);
+  }
+  .prof-tier .badge-dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--brand);
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .prof-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 14px 0;
+    margin: -34px 22px 0;
+    box-shadow: 0 4px 12px -4px rgba(15,17,21,0.12);
+    position: relative;
+    z-index: 2;
+  }
+  .prof-stat-cell {
+    text-align: center;
+    padding: 4px 8px;
+    border-right: 1px solid var(--line-soft);
+  }
+  .prof-stat-cell:last-child { border-right: none; }
+  .prof-stat-cell .v {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+  }
+  .prof-stat-cell .v.brand { color: var(--brand); }
+  .prof-stat-cell .l {
+    font-size: 9px;
+    color: var(--ink-3);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  .prof-body { flex: 1; overflow-y: auto; padding: 24px 22px 16px; }
+  .prof-section-h {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .pack-mini {
+    background: var(--surface-2);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 8px;
+    display: flex; gap: 12px;
+    align-items: center;
+  }
+  .pack-mini .ring {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: conic-gradient(var(--brand) calc(var(--p) * 1%), rgba(255,87,34,0.15) 0);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .pack-mini .ring::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    background: var(--surface-2);
+    border-radius: 50%;
+  }
+  .pack-mini .ring span {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 13px; font-weight: 500;
+    z-index: 1;
+  }
+  .pack-mini .info { flex: 1; }
+  .pack-mini .info .nm { font-size: 13px; font-weight: 500; }
+  .pack-mini .info .mt { font-size: 11px; color: var(--ink-2); margin-top: 2px; }
+  .pack-mini .info .exp { font-size: 10px; color: var(--brand); margin-top: 2px; font-weight: 500; }
+
+  .menu-list {
+    margin-top: 8px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .menu-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .menu-row .ico { color: var(--ink-2); }
+  .menu-row .lbl { flex: 1; font-size: 13px; }
+  .menu-row .arr { color: var(--ink-3); }
+</style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <span>Visual prototype · Native mobile app · iOS &amp; Android</span>
+  <span>4 key screens shown</span>
+</div>
+
+<div class="page">
+
+  <div class="page-head">
+    <h1 class="display">Mobile <b>experience.</b></h1>
+    <div class="sub">Built once with Flutter for iOS &amp; Android. Feature parity with the web portal, optimised for one-handed use and offline read of the next 7 days.</div>
+  </div>
+
+  <div class="phones-row">
+
+    <!-- ============ PHONE 1 — HOME / TODAY ============ -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-status">
+            <span>9:41</span>
+            <span class="right">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 22 12 2l10 20H2z" opacity=".9"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9c4-4 14-4 18 0"/><path d="M6 12c2.5-2.5 9.5-2.5 12 0"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
+              <span class="battery"></span>
+            </span>
+          </div>
+          <div class="home-header">
+            <div>
+              <div class="home-greeting">Tuesday · 5 May</div>
+              <div class="home-name">Hi Sarah <span style="color: var(--brand);">→</span></div>
+            </div>
+            <div class="icon-circle">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+              <span class="badge"></span>
+            </div>
+          </div>
+          <div class="home-body">
+
+            <div class="next-card">
+              <div class="label"><span class="pulse"></span>Next class · in 3h 24m</div>
+              <div class="name display">Reformer<br>Sculpt</div>
+              <div class="when">18:00 · Yara N. · Reformer 03</div>
+              <div class="countdown-mini">
+                <div class="cd-block"><div class="v">03</div><div class="l">Hours</div></div>
+                <div class="cd-block"><div class="v">24</div><div class="l">Min</div></div>
+                <div class="cd-block"><div class="v">12</div><div class="l">Sec</div></div>
+              </div>
+            </div>
+
+            <div class="stat-pills">
+              <div class="stat-pill brand">
+                <div class="v">7 <small>/ 10</small></div>
+                <div class="l">Credits</div>
+              </div>
+              <div class="stat-pill">
+                <div class="v">12 <small>weeks</small></div>
+                <div class="l">Streak</div>
+              </div>
+            </div>
+
+            <div class="home-section-h">
+              <div class="t">Also today</div>
+              <div class="a">See all →</div>
+            </div>
+
+            <div class="mini-class">
+              <div class="t-block"><div class="h">12:30</div><div class="d">50 min</div></div>
+              <div class="info">
+                <div class="nm">Stretch &amp; Release</div>
+                <div class="ins">Lara M. · 8 seats</div>
+              </div>
+              <span class="pill pill-open">Open</span>
+            </div>
+            <div class="mini-class">
+              <div class="t-block"><div class="h">19:30</div><div class="d">50 min</div></div>
+              <div class="info">
+                <div class="nm">Tower &amp; Mat</div>
+                <div class="ins">Salma R. · 1 seat</div>
+              </div>
+              <span class="pill pill-warn">1 left</span>
+            </div>
+
+          </div>
+          <div class="tab-bar">
+            <div class="tab active">
+              <svg class="ico ti" viewBox="0 0 24 24"><path d="M3 9 12 3l9 6v11a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>
+              Home
+            </div>
+            <div class="tab">
+              <svg class="ico ti" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+              Schedule
+            </div>
+            <div class="tab">
+              <svg class="ico ti" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 16l9 5 9-5M3 12l9 5 9-5"/></svg>
+              Packs
+            </div>
+            <div class="tab">
+              <svg class="ico ti" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+              Profile
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">Home</div>
+      <div class="phone-caption-sub">Today · countdown · quick stats</div>
+    </div>
+
+    <!-- ============ PHONE 2 — SCHEDULE BROWSE ============ -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-status">
+            <span>9:42</span>
+            <span class="right">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 22 12 2l10 20H2z" opacity=".9"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9c4-4 14-4 18 0"/><path d="M6 12c2.5-2.5 9.5-2.5 12 0"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
+              <span class="battery"></span>
+            </span>
+          </div>
+          <div class="sched-header">
+            <div class="sched-title display">Schedule.</div>
+            <div class="sched-search">
+              <svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              <input value="Reformer" />
+              <svg class="ico ico-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+          </div>
+
+          <div class="sched-day-strip">
+            <div class="day-pill active"><div class="dow">Tue</div><div class="dom">05</div></div>
+            <div class="day-pill"><div class="dow">Wed</div><div class="dom">06</div></div>
+            <div class="day-pill"><div class="dow">Thu</div><div class="dom">07</div></div>
+            <div class="day-pill"><div class="dow">Fri</div><div class="dom">08</div></div>
+            <div class="day-pill"><div class="dow">Sat</div><div class="dom">09</div></div>
+            <div class="day-pill"><div class="dow">Sun</div><div class="dom">10</div></div>
+            <div class="day-pill"><div class="dow">Mon</div><div class="dom">11</div></div>
+          </div>
+
+          <div class="filter-chips">
+            <div class="chip active">All</div>
+            <div class="chip">Reformer</div>
+            <div class="chip">Power</div>
+            <div class="chip">Mat</div>
+            <div class="chip">Beginner</div>
+          </div>
+
+          <div class="sched-list">
+            <div class="sched-section-h">Morning</div>
+
+            <div class="sched-class">
+              <div class="sc-time"><div class="h">10:00</div><div class="m">50m</div></div>
+              <div class="sc-info">
+                <div class="nm">Pre/postnatal</div>
+                <div class="lv">Beginners · Studio A</div>
+                <div class="seats"><span class="dot"></span>6 seats left</div>
+              </div>
+              <svg class="ico ico-sm arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <div class="sched-class">
+              <div class="sc-time"><div class="h">11:00</div><div class="m">50m</div></div>
+              <div class="sc-info">
+                <div class="nm">Power Reform</div>
+                <div class="lv">Advanced · Studio A</div>
+                <div class="seats warn"><span class="dot warn"></span>2 seats left</div>
+              </div>
+              <svg class="ico ico-sm arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <div class="sched-class">
+              <div class="sc-time"><div class="h">12:30</div><div class="m">50m</div></div>
+              <div class="sc-info">
+                <div class="nm">Stretch &amp; Release</div>
+                <div class="lv">All levels · Studio B</div>
+                <div class="seats"><span class="dot"></span>8 seats left</div>
+              </div>
+              <svg class="ico ico-sm arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <div class="sched-section-h">Evening</div>
+
+            <div class="sched-class booked">
+              <div class="sc-time"><div class="h">18:00</div><div class="m">50m</div></div>
+              <div class="sc-info">
+                <div class="nm">Reformer Sculpt</div>
+                <div class="lv">Intermediate · Studio A</div>
+                <div class="seats" style="color: var(--success); font-weight: 500;">
+                  <svg class="ico ico-sm" viewBox="0 0 24 24"><polyline points="4 12 10 18 20 6"/></svg>
+                  Booked · Reformer 03
+                </div>
+              </div>
+              <svg class="ico ico-sm arrow" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+          </div>
+
+          <div class="tab-bar">
+            <div class="tab"><svg class="ico ti" viewBox="0 0 24 24"><path d="M3 9 12 3l9 6v11a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+            <div class="tab active"><svg class="ico ti" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Schedule</div>
+            <div class="tab"><svg class="ico ti" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 16l9 5 9-5M3 12l9 5 9-5"/></svg>Packs</div>
+            <div class="tab"><svg class="ico ti" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>Profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">Schedule</div>
+      <div class="phone-caption-sub">Day strip · filters · search</div>
+    </div>
+
+    <!-- ============ PHONE 3 — CLASS DETAIL ============ -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-status" style="position: absolute; left: 0; right: 0; z-index: 3; color: white;">
+            <span>9:43</span>
+            <span class="right">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 22 12 2l10 20H2z" opacity=".9"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9c4-4 14-4 18 0"/><path d="M6 12c2.5-2.5 9.5-2.5 12 0"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
+              <span class="battery" style="border-color: white;"></span>
+            </span>
+          </div>
+          <div class="det-cover">
+            <div class="det-back">
+              <svg class="ico" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </div>
+            <div class="det-share">
+              <svg class="ico" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+            </div>
+            <div class="det-time-overlay">
+              <div class="meta">Tue · 5 May · Studio A</div>
+              <div class="when">18:00 — 18:50</div>
+            </div>
+          </div>
+          <div class="det-content">
+            <div class="det-name display">Reformer Sculpt</div>
+            <div class="det-level">Intermediate · 50 minutes</div>
+            <div class="det-stats">
+              <div class="det-stat"><div class="v brand">1</div><div class="l">Credit</div></div>
+              <div class="det-stat"><div class="v">9 / 12</div><div class="l">Spots</div></div>
+              <div class="det-stat"><div class="v">4.9 ★</div><div class="l">Rating</div></div>
+              <div class="det-stat"><div class="v">14×</div><div class="l">Done</div></div>
+            </div>
+            <div class="det-desc">Reformer-based sculpt session — heavier spring loading, precise tempo, longer time under tension. Builds visible strength &amp; the kind of stability that protects you everywhere else.</div>
+
+            <div class="det-trainer">
+              <div class="av">YN</div>
+              <div class="info">
+                <div class="nm">Yara Nasser</div>
+                <div class="ro">Senior instructor · 9 years · You've trained with Yara 14 times</div>
+              </div>
+            </div>
+
+            <div class="prof-section-h" style="margin-top: 16px;">Capacity</div>
+            <div class="det-cap-bar"><i></i></div>
+            <div class="det-cap-text">
+              <span>9 of 12 reformers booked</span>
+              <span style="color: var(--brand); font-weight: 500;">3 left</span>
+            </div>
+          </div>
+          <div class="det-action-bar">
+            <div class="price">
+              <div class="v">1 credit</div>
+              <div class="l">From your 10-pack</div>
+            </div>
+            <button class="det-book-btn">Book this class</button>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">Class detail</div>
+      <div class="phone-caption-sub">Full info · trainer · book CTA</div>
+    </div>
+
+    <!-- ============ PHONE 4 — PROFILE ============ -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-status" style="position: absolute; z-index: 3; color: white;">
+            <span>9:44</span>
+            <span class="right">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 22 12 2l10 20H2z" opacity=".9"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9c4-4 14-4 18 0"/><path d="M6 12c2.5-2.5 9.5-2.5 12 0"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>
+              <span class="battery" style="border-color: white;"></span>
+            </span>
+          </div>
+          <div class="prof-top">
+            <div class="prof-back">
+              <svg class="ico" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </div>
+            <div class="prof-greet">Member since Sept 2024</div>
+            <div class="prof-name display">Sarah Khalil</div>
+            <div class="prof-tier">
+              <div class="badge-dot">R</div>
+              Regular tier · 3 to Devoted →
+            </div>
+          </div>
+          <div class="prof-stats">
+            <div class="prof-stat-cell"><div class="v">8</div><div class="l">This mo.</div></div>
+            <div class="prof-stat-cell"><div class="v brand">72</div><div class="l">Total</div></div>
+            <div class="prof-stat-cell"><div class="v">12</div><div class="l">Streak</div></div>
+          </div>
+          <div class="prof-body">
+            <div class="prof-section-h">Active packs</div>
+            <div class="pack-mini">
+              <div class="ring" style="--p: 70"><span>7</span></div>
+              <div class="info">
+                <div class="nm">10-class reformer</div>
+                <div class="mt">7 of 10 remaining</div>
+                <div class="exp">Expires 23 May · 18 days</div>
+              </div>
+            </div>
+            <div class="pack-mini">
+              <div class="ring" style="--p: 100"><span>5</span></div>
+              <div class="info">
+                <div class="nm">5-class mat · family</div>
+                <div class="mt">5 of 5 · shared with family</div>
+                <div class="exp" style="color: var(--ink-3); font-weight: 400;">Expires 14 Aug</div>
+              </div>
+            </div>
+
+            <div class="menu-list">
+              <div class="menu-row">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>
+                <span class="lbl">Personal info</span>
+                <svg class="ico ico-sm arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+              <div class="menu-row">
+                <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>
+                <span class="lbl">Payment methods</span>
+                <svg class="ico ico-sm arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+              <div class="menu-row">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>
+                <span class="lbl">Notifications</span>
+                <svg class="ico ico-sm arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+              <div class="menu-row">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.5c-1 .5-1 1.5-1 2.5"/><line x1="12" y1="17.5" x2="12" y2="18"/></svg>
+                <span class="lbl">Help &amp; support</span>
+                <svg class="ico ico-sm arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="tab-bar">
+            <div class="tab"><svg class="ico ti" viewBox="0 0 24 24"><path d="M3 9 12 3l9 6v11a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z"/></svg>Home</div>
+            <div class="tab"><svg class="ico ti" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Schedule</div>
+            <div class="tab"><svg class="ico ti" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 16l9 5 9-5M3 12l9 5 9-5"/></svg>Packs</div>
+            <div class="tab active"><svg class="ico ti" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>Profile</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-caption">Profile</div>
+      <div class="phone-caption-sub">Tier · packs · settings</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

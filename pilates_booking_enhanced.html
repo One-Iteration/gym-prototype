@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corpo Pilates — Book a Class · Enhanced Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,300..500;9..144,1,300..500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E6;
+    --cream-2: #ECE5D5;
+    --paper: #FBF8F1;
+    --ink: #1C1F18;
+    --ink-2: #54574E;
+    --ink-3: #8A8C82;
+    --ink-4: #B8B5A8;
+    --sage: #4F5E47;
+    --sage-deep: #2F3A2A;
+    --sage-soft: #C4CDB8;
+    --sage-tint: #E5EBDA;
+    --terra: #B8593A;
+    --terra-soft: #E8C5B5;
+    --terra-tint: #F4E0D2;
+    --blue: #4A6B7C;
+    --blue-soft: #B5C9D2;
+    --blue-tint: #DCE5EA;
+    --line: #E1DACA;
+    --line-soft: #EDE6D5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Manrope', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .proto-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: var(--ink); color: var(--cream);
+    padding: 9px 24px; font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 28px 80px;
+  }
+
+  /* ---------- HEADER ---------- */
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .page-head h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .page-head h1 em { font-style: italic; color: var(--terra); font-weight: 400; }
+  .page-head .sub {
+    font-size: 13px; color: var(--ink-2);
+    margin-top: 8px;
+  }
+  .view-toggle {
+    display: inline-flex;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .view-toggle button {
+    padding: 7px 16px;
+    border: none; background: transparent;
+    font-family: inherit; font-size: 12px;
+    color: var(--ink-2); cursor: pointer;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .view-toggle button.active {
+    background: var(--ink); color: var(--paper);
+  }
+
+  /* ---------- FILTER BAR ---------- */
+  .filter-bar {
+    display: flex;
+    gap: 10px; align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .filter-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: inherit; font-size: 13px;
+    color: var(--ink); cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .filter-pill:hover { border-color: var(--ink-3); }
+  .filter-pill.active {
+    background: var(--sage-deep);
+    color: var(--paper);
+    border-color: var(--sage-deep);
+  }
+  .filter-pill .label-key {
+    color: var(--ink-3); font-weight: 400;
+  }
+  .filter-pill.active .label-key { color: var(--sage-soft); }
+  .filter-pill .chev {
+    width: 8px; height: 8px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+    opacity: 0.5;
+  }
+  .filter-spacer { flex: 1; }
+  .reset-link {
+    font-size: 12px; color: var(--terra);
+    text-decoration: none;
+    border-bottom: 1px solid var(--terra-soft);
+    padding-bottom: 1px;
+    cursor: pointer;
+  }
+
+  /* ---------- DAY NAV ---------- */
+  .day-nav {
+    display: flex; align-items: stretch;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .day-arrow {
+    width: 52px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink-2);
+    border-right: 1px solid var(--line);
+  }
+  .day-arrow:last-child {
+    border-right: none;
+    border-left: 1px solid var(--line);
+  }
+  .day-arrow:hover { background: var(--cream-2); }
+  .day-arrow .arr {
+    width: 9px; height: 9px;
+    border-top: 1.5px solid currentColor;
+    border-right: 1.5px solid currentColor;
+  }
+  .day-arrow.prev .arr { transform: rotate(-135deg); }
+  .day-arrow.next .arr { transform: rotate(45deg); }
+
+  .day-tabs {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+  .day-tab {
+    padding: 14px 8px 12px;
+    text-align: center;
+    border-right: 1px solid var(--line-soft);
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+  }
+  .day-tab:last-child { border-right: none; }
+  .day-tab:hover { background: var(--cream-2); }
+  .day-tab .dow {
+    font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .day-tab .dom {
+    font-family: 'Fraunces', serif;
+    font-weight: 400; font-size: 22px;
+    margin-top: 4px;
+    line-height: 1;
+  }
+  .day-tab.today .dom {
+    color: var(--terra);
+    font-style: italic;
+  }
+  .day-tab.today::after {
+    content: '';
+    position: absolute; left: 50%; bottom: 6px;
+    width: 4px; height: 4px;
+    background: var(--terra); border-radius: 50%;
+    transform: translateX(-50%);
+  }
+  .day-tab.selected {
+    background: var(--cream-2);
+  }
+
+  /* ---------- ZONE GROUP ---------- */
+  .zone-group { margin-bottom: 32px; }
+  .zone-head {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 14px;
+    padding-left: 64px; /* align with grid past time column */
+  }
+  .zone-head h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+  }
+  .zone-head .zone-meta {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* ---------- MATRIX GRID ---------- */
+  .matrix {
+    display: grid;
+    grid-template-columns: 60px repeat(7, 1fr);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: visible; /* important for hover popover */
+    position: relative;
+  }
+  .matrix-cell {
+    border-right: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+    min-height: 138px;
+    padding: 8px;
+    position: relative;
+  }
+  .matrix-cell.time {
+    grid-column: 1;
+    border-right: 1px solid var(--line);
+    background: var(--cream);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 14px;
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--ink-2);
+    letter-spacing: 0.02em;
+  }
+  .matrix-row:last-child .matrix-cell { border-bottom: none; }
+  .matrix-cell:nth-child(8n) { border-right: none; } /* last column of each row */
+
+  /* empty cell flourish */
+  .matrix-cell.day:not(.has-class)::after {
+    content: '';
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 16px; height: 1px;
+    background: var(--line);
+    transform: translate(-50%, -50%);
+  }
+
+  /* ---------- CLASS CARD ---------- */
+  .class-card {
+    position: relative;
+    height: 100%;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 11px 12px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    overflow: hidden;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .class-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--sage);
+  }
+  .class-card.cat-power::before { background: var(--terra); }
+  .class-card.cat-flow::before { background: var(--blue); }
+
+  .class-card:hover {
+    border-color: var(--ink);
+    box-shadow: 0 8px 20px -10px rgba(28, 31, 24, 0.18);
+    transform: translateY(-1px);
+    z-index: 10;
+  }
+  .class-card.full { opacity: 0.55; }
+  .class-card.full:hover { opacity: 1; }
+
+  .cc-time {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    color: var(--sage-deep);
+  }
+  .class-card.cat-power .cc-time { color: var(--terra); }
+  .class-card.cat-flow .cc-time { color: var(--blue); }
+
+  .cc-dur {
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+    margin-top: 1px;
+  }
+  .cc-name {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.25;
+    margin-top: 4px;
+    color: var(--ink);
+  }
+  .cc-level {
+    font-size: 11px;
+    color: var(--ink-2);
+    margin-top: 1px;
+  }
+  .cc-foot {
+    margin-top: auto;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .cc-trainer {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px;
+    color: var(--ink-2);
+  }
+  .cc-trainer .dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--sage-soft);
+    color: var(--sage-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .class-card.cat-power .cc-trainer .dot { background: var(--terra-soft); color: var(--terra); }
+  .class-card.cat-flow .cc-trainer .dot { background: var(--blue-soft); color: var(--blue); }
+
+  .cc-cap {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px;
+    color: var(--ink-3);
+  }
+  .cc-cap .bar {
+    flex: 1;
+    height: 3px;
+    background: var(--cream-2);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .cc-cap .bar i {
+    display: block;
+    height: 100%;
+    background: var(--sage);
+    border-radius: 2px;
+  }
+  .class-card.cat-power .cc-cap .bar i { background: var(--terra); }
+  .class-card.cat-flow .cc-cap .bar i { background: var(--blue); }
+  .cc-cap .num {
+    font-weight: 500;
+    color: var(--ink-2);
+  }
+  .cc-cap.warn .num { color: var(--terra); }
+  .cc-cap.full .bar i { background: var(--ink-4); }
+  .cc-cap.full .num { color: var(--ink-3); }
+
+  /* ---------- HOVER POPOVER ---------- */
+  .pop {
+    position: absolute;
+    top: -8px;
+    left: calc(100% + 14px);
+    width: 320px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 22px;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(4px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+    box-shadow: 0 24px 60px -24px rgba(28,31,24,0.28),
+                0 8px 16px -8px rgba(28,31,24,0.12);
+    pointer-events: none;
+  }
+  .class-card:hover .pop {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0s;
+    pointer-events: auto;
+  }
+  .class-card.flip-left .pop {
+    left: auto;
+    right: calc(100% + 14px);
+  }
+
+  .pop-head {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-3);
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 12px;
+  }
+  .pop-head .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+  }
+  .class-card.cat-power .pop-head .dot { background: var(--terra); }
+  .class-card.cat-flow .pop-head .dot { background: var(--blue); }
+  .pop-head .cat-label { font-weight: 500; }
+
+  .pop-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 26px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+  }
+  .pop-level {
+    font-size: 13px;
+    color: var(--ink-2);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .pop-desc {
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+  .pop-trainer {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 16px;
+  }
+  .pop-trainer .av {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--sage-soft);
+    color: var(--sage-deep);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .class-card.cat-power .pop-trainer .av { background: var(--terra-soft); color: var(--terra); }
+  .class-card.cat-flow .pop-trainer .av { background: var(--blue-soft); color: var(--blue); }
+  .pop-trainer .ti .nm { font-size: 13px; font-weight: 500; }
+  .pop-trainer .ti .role {
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+
+  .pop-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 14px;
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+  .pop-meta .k {
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .pop-meta .v {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .pop-meta .v em { font-style: normal; color: var(--terra); }
+
+  .pop-also {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .pop-also strong {
+    display: block;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: var(--ink-2);
+    font-weight: 500;
+  }
+  .pop-also a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1px;
+    margin-right: 6px;
+  }
+  .pop-also a:hover { border-bottom-color: var(--terra); color: var(--terra); }
+
+  .pop-action {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .pop-action .pop-btn {
+    flex: 1;
+    padding: 12px 16px;
+    background: var(--sage-deep);
+    color: var(--paper);
+    border: none;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s;
+  }
+  .pop-action .pop-btn:hover { background: var(--ink); }
+  .class-card.cat-power .pop-action .pop-btn { background: var(--terra); }
+  .class-card.cat-flow .pop-action .pop-btn { background: var(--blue); }
+  .pop-action .pop-btn.disabled {
+    background: var(--ink-4);
+    cursor: not-allowed;
+  }
+  .pop-action .credit-note {
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+
+  .pop-waitlist-note {
+    background: var(--terra-tint);
+    color: var(--terra);
+    font-size: 11px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    line-height: 1.45;
+  }
+
+  /* ---------- LEGEND ---------- */
+  .legend {
+    display: flex; gap: 24px; align-items: center;
+    margin-top: 20px;
+    font-size: 11px; letter-spacing: 0.06em;
+    color: var(--ink-3);
+  }
+  .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .legend-dot.s { background: var(--sage); }
+  .legend-dot.t { background: var(--terra); }
+  .legend-dot.b { background: var(--blue); }
+
+  /* ---------- KEY/HINT BAR ---------- */
+  .hint-bar {
+    margin-top: 14px;
+    padding: 12px 18px;
+    background: var(--paper);
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--ink-2);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .hint-bar .hint-key {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--terra);
+  }
+</style>
+</head>
+<body>
+
+<div class="proto-bar">
+  <span>Visual prototype · Booking matrix · v1.1 (enhanced)</span>
+  <span>Hover any class for details</span>
+</div>
+
+<div class="page">
+
+  <header class="page-head">
+    <div>
+      <h1>Book a class<em>.</em></h1>
+      <div class="sub">Reformer Room · Studio A · 12 reformers · Tue 5 May — Mon 11 May</div>
+    </div>
+    <div class="view-toggle">
+      <button class="active">Calendar</button>
+      <button>List</button>
+    </div>
+  </header>
+
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <button class="filter-pill"><span class="label-key">Category</span> <span>All</span> <span class="chev"></span></button>
+    <button class="filter-pill"><span class="label-key">Class</span> <span>All</span> <span class="chev"></span></button>
+    <button class="filter-pill active"><span class="label-key">Trainer</span> <span>Any</span> <span class="chev"></span></button>
+    <button class="filter-pill"><span class="label-key">Zone</span> <span>Reformer Room</span> <span class="chev"></span></button>
+    <button class="filter-pill"><span class="label-key">Level</span> <span>Any</span> <span class="chev"></span></button>
+    <div class="filter-spacer"></div>
+    <a class="reset-link">Reset filters</a>
+  </div>
+
+  <!-- DAY NAV -->
+  <div class="day-nav">
+    <button class="day-arrow prev"><span class="arr"></span></button>
+    <div class="day-tabs">
+      <div class="day-tab today selected">
+        <div class="dow">Tue</div>
+        <div class="dom">05/05</div>
+      </div>
+      <div class="day-tab">
+        <div class="dow">Wed</div>
+        <div class="dom">06/05</div>
+      </div>
+      <div class="day-tab">
+        <div class="dow">Thu</div>
+        <div class="dom">07/05</div>
+      </div>
+      <div class="day-tab">
+        <div class="dow">Fri</div>
+        <div class="dom">08/05</div>
+      </div>
+      <div class="day-tab">
+        <div class="dow">Sat</div>
+        <div class="dom">09/05</div>
+      </div>
+      <div class="day-tab">
+        <div class="dow">Sun</div>
+        <div class="dom">10/05</div>
+      </div>
+      <div class="day-tab">
+        <div class="dow">Mon</div>
+        <div class="dom">11/05</div>
+      </div>
+    </div>
+    <button class="day-arrow next"><span class="arr"></span></button>
+  </div>
+
+  <!-- ZONE: REFORMER ROOM -->
+  <div class="zone-group">
+    <div class="zone-head">
+      <h2>Reformer Room</h2>
+      <span class="zone-meta">Studio A · 12 reformers</span>
+    </div>
+
+    <div class="matrix">
+      <!-- ROW 09:00 -->
+      <div class="matrix-row" style="display: contents;">
+        <div class="matrix-cell time">09:00</div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card flip-left">
+            <div class="cc-time">09:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Reformer Pilates</div>
+            <div class="cc-level">All levels</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">LA</span> Lara A.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 50%"></i></div><span class="num">6/12</span></div>
+            </div>
+            <!-- POPOVER -->
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Reformer · Saturday 09 May</span></div>
+              <div class="pop-name">Reformer Pilates</div>
+              <div class="pop-level">All levels · 50 min</div>
+              <div class="pop-desc">A balanced reformer flow that traverses footwork, abdominals, arms, and stretching. Suitable for any returning member.</div>
+              <div class="pop-trainer">
+                <div class="av">LA</div>
+                <div class="ti">
+                  <div class="nm">Lara Aydin</div>
+                  <div class="role">Senior instructor · 8 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">6 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + box</span>
+                <span class="k">Best for</span><span class="v">Anyone past intro</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Wed 11am</a><a>Thu 11am</a><a>Sun 10am</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day"></div>
+      </div>
+
+      <!-- ROW 10:00 -->
+      <div class="matrix-row" style="display: contents;">
+        <div class="matrix-cell time">10:00</div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-power">
+            <div class="cc-time">10:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Power Reform</div>
+            <div class="cc-level">Advanced</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 75%"></i></div><span class="num">9/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Power · Thursday 07 May</span></div>
+              <div class="pop-name">Power Reform</div>
+              <div class="pop-level">Advanced · 50 min</div>
+              <div class="pop-desc">High-intensity reformer flow with heavy springs, jump board work, and minimal transitions. Expect to leave shaking.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">9 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + jump board</span>
+                <span class="k">Best for</span><span class="v">Confident reformer practice</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Tue 12pm</a><a>Wed 11am</a><a>Sun 12pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-power">
+            <div class="cc-time">10:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Power House Reform</div>
+            <div class="cc-level">Beginners → Intermediate</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 67%"></i></div><span class="num">8/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Power · Friday 08 May</span></div>
+              <div class="pop-name">Power House Reform</div>
+              <div class="pop-level">Beginners to Intermediate · 50 min</div>
+              <div class="pop-desc">A bridge class — the energy of Power Reform with progressions designed for members building up. Modifications offered every block.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">8 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + box</span>
+                <span class="k">Best for</span><span class="v">Building strength &amp; stamina</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Mon 11am</a><a>Wed 7pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-flow flip-left">
+            <div class="cc-time">10:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Balance Flow Pilates</div>
+            <div class="cc-level">Beginner</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">MS</span> Maya S.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 33%"></i></div><span class="num">4/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Flow · Saturday 09 May</span></div>
+              <div class="pop-name">Balance Flow Pilates</div>
+              <div class="pop-level">Beginner · 50 min</div>
+              <div class="pop-desc">Slower-paced reformer with extended attention to alignment, breath, and balance. Ideal as a recovery day or a re-entry class.</div>
+              <div class="pop-trainer">
+                <div class="av">MS</div>
+                <div class="ti">
+                  <div class="nm">Maya Al-Saad</div>
+                  <div class="role">Instructor · 5 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">4 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer only</span>
+                <span class="k">Best for</span><span class="v">First-timers, recovery days</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Mon 12pm</a><a>Thu 6pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day"></div>
+      </div>
+
+      <!-- ROW 11:00 -->
+      <div class="matrix-row" style="display: contents;">
+        <div class="matrix-cell time">11:00</div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-flow">
+            <div class="cc-time">11:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Flex n' Flow</div>
+            <div class="cc-level">Beginners</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 92%"></i></div><span class="num warn">11/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Flow · Wednesday 06 May</span></div>
+              <div class="pop-name">Flex n' Flow</div>
+              <div class="pop-level">Beginners · 50 min</div>
+              <div class="pop-desc">Continuous, choreographed reformer movement focused on mobility and length. Music-led, low-impact, no jumping.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-waitlist-note">
+                Only 1 spot left. If it fills up, you can join the waitlist — we'll auto-book you the moment another member cancels.
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">11 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + light hand weights</span>
+                <span class="k">Best for</span><span class="v">Mobility &amp; flow practice</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Thu 11am</a><a>Sun 11:30am</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-flow">
+            <div class="cc-time">11:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Flex n' Flow</div>
+            <div class="cc-level">Beginners</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 75%"></i></div><span class="num">9/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Flow · Thursday 07 May</span></div>
+              <div class="pop-name">Flex n' Flow</div>
+              <div class="pop-level">Beginners · 50 min</div>
+              <div class="pop-desc">Continuous, choreographed reformer movement focused on mobility and length. Music-led, low-impact, no jumping.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">9 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + light hand weights</span>
+                <span class="k">Best for</span><span class="v">Mobility &amp; flow practice</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Wed 11am</a><a>Sun 11:30am</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-power">
+            <div class="cc-time">11:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Power Reform</div>
+            <div class="cc-level">Advanced</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 100%"></i></div><span class="num warn">12/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Power · Friday 08 May</span></div>
+              <div class="pop-name">Power Reform</div>
+              <div class="pop-level">Advanced · 50 min</div>
+              <div class="pop-waitlist-note">
+                This class is full. Join the waitlist — historically, ~80% of Friday 11am waitlisted members get auto-promoted before class.
+              </div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">Full · 0 of 12 free</span>
+                <span class="k">Waitlist</span><span class="v">3 ahead of you</span>
+                <span class="k">Equipment</span><span class="v">Reformer + jump board</span>
+                <span class="k">Credits</span><span class="v">Held until promoted</span>
+              </div>
+              <div class="pop-also">
+                <strong>Try instead</strong>
+                <a>Tue 12pm</a><a>Wed 11am</a><a>Sun 12pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Join waitlist</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card flip-left">
+            <div class="cc-time">11:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Reformer Pilates</div>
+            <div class="cc-level">All levels</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">LA</span> Lara A.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 58%"></i></div><span class="num">7/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Reformer · Saturday 09 May</span></div>
+              <div class="pop-name">Reformer Pilates</div>
+              <div class="pop-level">All levels · 50 min</div>
+              <div class="pop-desc">A balanced reformer flow that traverses footwork, abdominals, arms, and stretching. Suitable for any returning member.</div>
+              <div class="pop-trainer">
+                <div class="av">LA</div>
+                <div class="ti">
+                  <div class="nm">Lara Aydin</div>
+                  <div class="role">Senior instructor · 8 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">7 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + box</span>
+                <span class="k">Best for</span><span class="v">Anyone past intro</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Sat 9am</a><a>Sun 10am</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day"></div>
+      </div>
+
+      <!-- ROW 12:00 -->
+      <div class="matrix-row" style="display: contents;">
+        <div class="matrix-cell time">12:00</div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-power">
+            <div class="cc-time">12:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Power Reform</div>
+            <div class="cc-level">Advanced</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 42%"></i></div><span class="num">5/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Power · Tuesday 05 May</span></div>
+              <div class="pop-name">Power Reform</div>
+              <div class="pop-level">Advanced · 50 min</div>
+              <div class="pop-desc">High-intensity reformer flow with heavy springs, jump board work, and minimal transitions. Expect to leave shaking.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">5 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + jump board</span>
+                <span class="k">Best for</span><span class="v">Confident reformer practice</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Wed 11am</a><a>Sun 12pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-power">
+            <div class="cc-time">12:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Power Reform</div>
+            <div class="cc-level">Advanced</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 67%"></i></div><span class="num">8/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Power · Thursday 07 May</span></div>
+              <div class="pop-name">Power Reform</div>
+              <div class="pop-level">Advanced · 50 min</div>
+              <div class="pop-desc">High-intensity reformer flow with heavy springs, jump board work, and minimal transitions. Expect to leave shaking.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">8 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + jump board</span>
+                <span class="k">Best for</span><span class="v">Confident reformer practice</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Tue 12pm</a><a>Wed 11am</a><a>Sun 12pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card flip-left">
+            <div class="cc-time">12:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Reformer Pilates</div>
+            <div class="cc-level">All levels</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">LA</span> Lara A.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 50%"></i></div><span class="num">6/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Reformer · Friday 08 May</span></div>
+              <div class="pop-name">Reformer Pilates</div>
+              <div class="pop-level">All levels · 50 min</div>
+              <div class="pop-desc">A balanced reformer flow that traverses footwork, abdominals, arms, and stretching. Suitable for any returning member.</div>
+              <div class="pop-trainer">
+                <div class="av">LA</div>
+                <div class="ti">
+                  <div class="nm">Lara Aydin</div>
+                  <div class="role">Senior instructor · 8 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">6 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + box</span>
+                <span class="k">Best for</span><span class="v">Anyone past intro</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Sat 9am</a><a>Sat 11am</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-power flip-left">
+            <div class="cc-time">12:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Power Reform</div>
+            <div class="cc-level">Advanced</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 50%"></i></div><span class="num">6/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Power · Saturday 09 May</span></div>
+              <div class="pop-name">Power Reform</div>
+              <div class="pop-level">Advanced · 50 min</div>
+              <div class="pop-desc">High-intensity reformer flow with heavy springs, jump board work, and minimal transitions. Expect to leave shaking.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">6 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + jump board</span>
+                <span class="k">Best for</span><span class="v">Confident reformer practice</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Tue 12pm</a><a>Thu 12pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-power flip-left">
+            <div class="cc-time">12:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Power Reform</div>
+            <div class="cc-level">Advanced</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 75%"></i></div><span class="num">9/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Power · Sunday 10 May</span></div>
+              <div class="pop-name">Power Reform</div>
+              <div class="pop-level">Advanced · 50 min</div>
+              <div class="pop-desc">High-intensity reformer flow with heavy springs, jump board work, and minimal transitions. Expect to leave shaking.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">9 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + jump board</span>
+                <span class="k">Best for</span><span class="v">Confident reformer practice</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Tue 12pm</a><a>Thu 12pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROW 13:00 -->
+      <div class="matrix-row" style="display: contents;">
+        <div class="matrix-cell time">13:00</div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-power">
+            <div class="cc-time">13:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Sculpt n' Strength</div>
+            <div class="cc-level">Intermediate</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 25%"></i></div><span class="num">3/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Power · Thursday 07 May</span></div>
+              <div class="pop-name">Sculpt n' Strength</div>
+              <div class="pop-level">Intermediate · 50 min</div>
+              <div class="pop-desc">Reformer-based strength block: heavy spring loading, slower tempo, longer holds. Builds the kind of stability that protects you in everything else you do.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">3 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + magic circle</span>
+                <span class="k">Best for</span><span class="v">Strength &amp; stability work</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Mon 1pm</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card flip-left">
+            <div class="cc-time">13:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Reformer Pilates</div>
+            <div class="cc-level">All levels</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">LA</span> Lara A.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 67%"></i></div><span class="num">8/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Reformer · Friday 08 May</span></div>
+              <div class="pop-name">Reformer Pilates</div>
+              <div class="pop-level">All levels · 50 min</div>
+              <div class="pop-desc">A balanced reformer flow that traverses footwork, abdominals, arms, and stretching. Suitable for any returning member.</div>
+              <div class="pop-trainer">
+                <div class="av">LA</div>
+                <div class="ti">
+                  <div class="nm">Lara Aydin</div>
+                  <div class="role">Senior instructor · 8 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">8 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + box</span>
+                <span class="k">Best for</span><span class="v">Anyone past intro</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Sat 9am</a><a>Sun 10am</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day"></div>
+        <div class="matrix-cell day has-class">
+          <div class="class-card cat-flow flip-left">
+            <div class="cc-time">13:00</div>
+            <div class="cc-dur">50 min</div>
+            <div class="cc-name">Flex n' Flow</div>
+            <div class="cc-level">Beginners</div>
+            <div class="cc-foot">
+              <div class="cc-trainer"><span class="dot">SD</span> Selin D.</div>
+              <div class="cc-cap"><div class="bar"><i style="width: 50%"></i></div><span class="num">6/12</span></div>
+            </div>
+            <div class="pop">
+              <div class="pop-head"><span class="dot"></span><span class="cat-label">Flow · Sunday 10 May</span></div>
+              <div class="pop-name">Flex n' Flow</div>
+              <div class="pop-level">Beginners · 50 min</div>
+              <div class="pop-desc">Continuous, choreographed reformer movement focused on mobility and length. Music-led, low-impact, no jumping.</div>
+              <div class="pop-trainer">
+                <div class="av">SD</div>
+                <div class="ti">
+                  <div class="nm">Selin Demir</div>
+                  <div class="role">Lead instructor · 11 years</div>
+                </div>
+              </div>
+              <div class="pop-meta">
+                <span class="k">Capacity</span><span class="v">6 of 12 reformers</span>
+                <span class="k">Equipment</span><span class="v">Reformer + light hand weights</span>
+                <span class="k">Best for</span><span class="v">Mobility &amp; flow practice</span>
+                <span class="k">Credits</span><span class="v"><em>1 credit</em> from your 10-pack</span>
+              </div>
+              <div class="pop-also">
+                <strong>Also this week</strong>
+                <a>Wed 11am</a><a>Thu 11am</a>
+              </div>
+              <div class="pop-action">
+                <button class="pop-btn">Book this class</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="matrix-cell day"></div>
+      </div>
+
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="legend-dot s"></span>Reformer · all levels</span>
+      <span class="legend-item"><span class="legend-dot t"></span>Power · advanced</span>
+      <span class="legend-item"><span class="legend-dot b"></span>Flow · beginner</span>
+    </div>
+  </div>
+
+  <div class="hint-bar">
+    <span><span class="hint-key">Hover any class</span> to see description, trainer, exact capacity, and other times this week.</span>
+    <span style="color: var(--ink-3); font-size: 11px; letter-spacing: 0.06em;">Booking uses 1 credit from your active pack</span>
+  </div>
+
+</div>
+</body>
+</html>
