@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corpo Pilates — Odoo replacement prototypes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..600&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F7F5;
+    --surface: #FFFFFF;
+    --surface-2: #F1F1EE;
+    --ink: #0F1115;
+    --ink-2: #4A4F58;
+    --ink-3: #8B8F99;
+    --line: #E5E5E2;
+    --line-soft: #EFEFEC;
+    --brand: #FF5722;
+    --brand-dark: #D94315;
+    --brand-tint: #FFE4D6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; letter-spacing: -0.02em; }
+
+  .top-bar {
+    background: var(--ink);
+    color: white;
+    padding: 10px 32px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .top-bar .right { color: var(--brand); }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 56px 32px 80px;
+  }
+
+  /* HERO */
+  .hero {
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 48px;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 48px;
+    align-items: end;
+  }
+  .hero h1 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 400;
+    font-size: 80px;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+  .hero h1 b { font-weight: 600; color: var(--brand); }
+  .hero h1 .em { font-style: italic; font-weight: 300; }
+  .hero-sub {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 24px;
+    font-weight: 600;
+  }
+  .hero-sub b { color: var(--brand); }
+  .hero-side {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.65;
+  }
+  .hero-side .label {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .hero-side .meta-row {
+    display: flex;
+    gap: 32px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .hero-side .meta-row .meta-cell .v {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .hero-side .meta-row .meta-cell .l {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 4px;
+    letter-spacing: 0.06em;
+  }
+
+  /* SECTION TITLE */
+  .section-title {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .section-title h2 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+  }
+  .section-title .meta {
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+  }
+
+  /* CARD GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 56px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 32px;
+    text-decoration: none;
+    color: inherit;
+    display: flex; flex-direction: column;
+    min-height: 280px;
+    transition: all 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 32px -16px rgba(15,17,21,0.18);
+  }
+  .card::after {
+    content: '→';
+    position: absolute;
+    top: 32px; right: 32px;
+    font-size: 24px;
+    color: var(--ink-3);
+    transition: transform 0.18s, color 0.18s;
+  }
+  .card:hover::after {
+    color: var(--brand);
+    transform: translateX(4px);
+  }
+  .card .num {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--brand);
+    font-weight: 600;
+  }
+  .card h3 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 14px 0 12px;
+    max-width: 80%;
+  }
+  .card p {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin-bottom: auto;
+    max-width: 95%;
+  }
+  .card .tags {
+    display: flex; gap: 6px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .card .tag {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    background: var(--surface-2);
+    border-radius: 999px;
+    color: var(--ink-2);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .card.dark {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .card.dark .num { color: var(--brand); }
+  .card.dark h3 { color: white; }
+  .card.dark p { color: rgba(255,255,255,0.7); }
+  .card.dark .tag {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.8);
+  }
+  .card.dark::after { color: rgba(255,255,255,0.4); }
+  .card.dark:hover::after { color: var(--brand); }
+
+  /* CONTEXT */
+  .context {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+  }
+  .context .col {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+  .context .col h4 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  /* FOOTER */
+  .foot {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 760px) {
+    .hero { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 56px; }
+    .grid, .context { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <span>Visual prototypes — not yet wired to a backend</span>
+  <span class="right">v1.1 · May 2026</span>
+</div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div>
+      <div class="hero-sub">CORPO <b>PILATES</b> · ODOO REPLACEMENT</div>
+      <h1 class="display">
+        Booking.<br>
+        <span class="em">Reimagined</span><br>
+        for <b>members.</b>
+      </h1>
+    </div>
+    <div class="hero-side">
+      <div class="label">For internal review</div>
+      <p>Four visual prototypes proposing what a custom Odoo Enterprise 19 build would look like as a replacement for the current PerfectGym SaaS — covering the public booking surface, the logged-in member experience, the native mobile app, and the staff backend.</p>
+      <div class="meta-row">
+        <div class="meta-cell">
+          <div class="v">6</div>
+          <div class="l">Custom modules</div>
+        </div>
+        <div class="meta-cell">
+          <div class="v">~20</div>
+          <div class="l">Weeks · 2 devs</div>
+        </div>
+        <div class="meta-cell">
+          <div class="v">4</div>
+          <div class="l">Surfaces</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PROTOTYPES GRID -->
+  <section>
+    <div class="section-title">
+      <h2 class="display">The four prototypes</h2>
+      <div class="meta">Click any card to open</div>
+    </div>
+
+    <div class="grid">
+
+      <a href="pilates_booking_enhanced.html" class="card">
+        <div class="num">01 · Public</div>
+        <h3>Booking matrix</h3>
+        <p>The public class schedule — time-rows × day-columns grouped by zone. Hover any class for description, instructor, exact capacity, equipment, and other times this week. The replacement for what's at /CLientPortal2/#/Classes.</p>
+        <div class="tags">
+          <span class="tag">Hover popover</span>
+          <span class="tag">Filter pills</span>
+          <span class="tag">No login required</span>
+        </div>
+      </a>
+
+      <a href="pilates_member_portal.html" class="card dark">
+        <div class="num">02 · Logged in</div>
+        <h3>Member portal</h3>
+        <p>The home base for an active member — live countdown to next class, credit balance, weekly schedule with one-click booking, upcoming reservations, active packs with progress rings, attendance streak heatmap.</p>
+        <div class="tags">
+          <span class="tag">Web · responsive</span>
+          <span class="tag">Personalised</span>
+          <span class="tag">Live data</span>
+        </div>
+      </a>
+
+      <a href="pilates_mobile_app.html" class="card">
+        <div class="num">03 · Mobile</div>
+        <h3>Native app</h3>
+        <p>Four key screens of the iOS &amp; Android app: Today / countdown, Schedule browse with filters, Class detail with book CTA, and Profile with packs &amp; tier. Built once with Flutter to match the web portal feature-for-feature.</p>
+        <div class="tags">
+          <span class="tag">iOS + Android</span>
+          <span class="tag">Flutter</span>
+          <span class="tag">4 screens</span>
+        </div>
+      </a>
+
+      <a href="pilates_odoo_backend.html" class="card">
+        <div class="num">04 · Staff</div>
+        <h3>Odoo backend</h3>
+        <p>Native Odoo Enterprise 19 chrome. Daily kanban of class sessions with state badges &amp; capacity, plus the full session form with attendee roster, check-in workflow, smart buttons, and the audit trail in chatter — including waitlist auto-promotion events.</p>
+        <div class="tags">
+          <span class="tag">Odoo 19</span>
+          <span class="tag">Kanban + form</span>
+          <span class="tag">Standard chrome</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- CONTEXT -->
+  <section>
+    <div class="section-title">
+      <h2 class="display">Build context</h2>
+    </div>
+    <div class="context">
+      <div class="col">
+        <h4>Architecture</h4>
+        Six custom Odoo modules: <b>studio_core</b> (instructors, rooms, class types), <b>studio_booking</b> (booking, waitlist, attendance), <b>studio_membership</b> (packs, contracts, family), <b>studio_payment</b> (provider abstraction), <b>studio_api</b> (JWT REST), <b>studio_website</b> (public site + portal).
+      </div>
+      <div class="col">
+        <h4>Migration</h4>
+        Mandatory migration from PerfectGym: active members, active contracts, forward bookings, pack credit balances. Historical attendance &amp; transactions can be deferred. Cutover window: 1 weekend with read-only fallback.
+      </div>
+      <div class="col">
+        <h4>Phasing</h4>
+        Phase 1 — backend foundation (5–6 wk). Phase 2 — public site &amp; member portal (3–4 wk). Phase 3 — mobile app (8–10 wk, parallel). Phase 4 — migration &amp; cutover (2 wk). Total: ~18–22 weeks with two developers.
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <span>CORPO PILATES · INTERNAL REVIEW · NOT FOR DISTRIBUTION</span>
+    <span>VISUAL PROTOTYPES · NO BACKEND</span>
+  </div>
+
+</div>
+
+</body>
+</html>
